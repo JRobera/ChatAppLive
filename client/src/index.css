@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+body,
+#root {
+  @apply h-full;
+}
+
+::-webkit-scrollbar {
+  @apply bg-[#edeefc] w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#edeefc];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#bdbcbc] rounded-lg;
+}
