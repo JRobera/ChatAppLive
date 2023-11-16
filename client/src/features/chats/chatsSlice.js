@@ -25,15 +25,22 @@ export const chatsSlice = createSlice({
   name: "chats",
   initialState,
   extraReducers: (builder) => {
+    builder.addCase(fetchChats.pending, (state, action) => {
+      state.status = "loading";
+    });
     builder.addCase(fetchChats.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.chats = action.payload;
     });
+    builder.addCase(fetchChats.rejected, (state, action) => {
+      state.status = "filed";
+      state.error = action.error.message;
+    });
   },
 });
 
-export const selectAllpost = (state) => state.chats.chats;
-export const getChatStatus = (state) => state.status;
-export const getChatError = (state) => state.error;
+export const selectAllChats = (state) => state.chats.chats;
+export const getChatStatus = (state) => state.chats.status;
+export const getChatError = (state) => state.chats.error;
 
 export default chatsSlice.reducer;

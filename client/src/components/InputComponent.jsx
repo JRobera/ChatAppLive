@@ -9,8 +9,15 @@ import {
   postMessage,
 } from "../features/messages/messageSlice";
 import { selectUser } from "../features/user/userSlice";
+import ReplyMessage from "./ReplyMessage";
+import { addNotification } from "../features/notification/notificationSlice";
 
-export default function InputComponent({ socket, currentChat }) {
+export default function InputComponent({
+  socket,
+  currentChat,
+  replyMessage,
+  setreplyMessage,
+}) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const location = useLocation();
@@ -23,35 +30,48 @@ export default function InputComponent({ socket, currentChat }) {
   });
 
   const sendMessage = () => {
-    {
-      location.pathname === "/home/person"
-        ? socket.emit("send-message", message)
-        : socket.emit("send-group-message", message);
-    }
     const temp = {
       ...message,
+      replyTo: replyMessage,
       user: user?._id,
       currentChat: currentChat?._id,
       type: "text",
     };
-    const tempG = { ...message, currentChat: currentChat?._id, type: "text" };
+    const tempG = {
+      ...message,
+      replyTo: replyMessage,
+      currentChat: currentChat?._id,
+      type: "text",
+    };
 
-    {
-      location.pathname === "/home/person"
-        ? dispatch(postMessage(temp))
-        : dispatch(postGroupMessage(tempG));
+    if (location.pathname === "/home/person") {
+      socket.emit("send-message", temp);
+      dispatch(postMessage(temp));
+      dispatch(addNotification(temp));
+    } else {
+      socket.emit("send-group-message", tempG);
+      dispatch(postGroupMessage(tempG));
     }
 
     setMessage({
       senderId: { _id: user?._id, fullName: user?.fullName },
       message: "",
+      replyTo: null,
       time: new Date().toISOString(),
       type: "text",
     });
+    setreplyMessage(null);
   };
-
+  // console.log(replyMessage);
   return (
-    <div className="border-t-2 flex gap-1 items-center p-1">
+    <div className="border-t-2 flex gap-1 items-center p-1 relative">
+      {replyMessage && (
+        <ReplyMessage
+          name={replyMessage?.name}
+          message={replyMessage?.message}
+          setreplyMessage={setreplyMessage}
+        />
+      )}
       <textarea
         name="message"
         id=""

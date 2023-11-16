@@ -1,20 +1,22 @@
 import { Schema, model } from "mongoose";
 
-const ChatSchema = new Schema(
+const notificationSchema = Schema(
   {
-    room: { type: String },
-    chats: [
+    userId: { type: Schema.Types.ObjectId, ref: "user" },
+    notifications: [
       {
         message: { type: String },
         time: { type: String },
         senderId: { type: Schema.Types.ObjectId, ref: "user" },
         replyTo: { name: { type: String }, message: { type: String } },
         type: { type: String },
+        markasReaden: { type: Boolean, default: false },
       },
     ],
   },
   { timestamps: true }
 );
 
-const Chat = model("Chat", ChatSchema);
-export default Chat;
+const notification = model("Notification", notificationSchema);
+
+export default notification;

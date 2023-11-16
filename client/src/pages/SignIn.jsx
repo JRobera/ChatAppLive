@@ -47,17 +47,16 @@ export default function SignIn() {
 
   const submit = (data) => {
     dispatch(loginUser(data));
+
+    reset();
+  };
+  useEffect(() => {
     if (userStatus === "succeeded") {
       toast.success("Signed in successfully");
     } else if (userStatus === "failed") {
       toast.error(userError);
     }
-    reset();
-  };
-
-  if (userError === "failed") {
-    console.log("user already exits!");
-  }
+  }, [userStatus]);
 
   return (
     <form

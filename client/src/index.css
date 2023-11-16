@@ -19,3 +19,7 @@ body,
 ::-webkit-scrollbar-thumb {
   @apply bg-[#bdbcbc] rounded-lg;
 }
+
+.side-bar a.active {
+  @apply bg-[#878ef8] text-white p-1 rounded-sm;
+}

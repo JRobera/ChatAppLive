@@ -24,6 +24,17 @@ export const postMessage = createAsyncThunk(
   }
 );
 
+export const deleteMessageAsync = createAsyncThunk(
+  "messages/deleteMessage",
+  async (data) => {
+    const res = await axios.put(
+      "http://localhost:4000/api/delete/message",
+      data
+    );
+    return res.data;
+  }
+);
+
 export const fetchGroupChat = createAsyncThunk(
   "groupchat/fetchGroupChat",
   async (data) => {
@@ -46,13 +57,29 @@ export const postGroupMessage = createAsyncThunk(
   }
 );
 
+export const deleteGroupMessageAsync = createAsyncThunk(
+  "messages/deleteMessage",
+  async (data) => {
+    const res = await axios.put(
+      "http://localhost:4000/api/delete/group/message",
+      data
+    );
+    return res.data;
+  }
+);
+
 export const messagesSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
     addNewMessage: (state, action) => {
-      // console.log(action.payload);
-      state.messages.push(action.payload);
+      console.log(action.payload);
+      state.messages?.chats?.push(action.payload);
+    },
+    deleteMessage: (state, action) => {
+      state.messages.chats = state.messages.chats.filter(
+        (message) => message._id !== action.payload
+      );
     },
     restMessage: (state, action) => {
       state.messages = [];
@@ -65,7 +92,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(fetchMessages.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.messages = action.payload.chats;
+      state.messages = action.payload;
     });
     builder.addCase(fetchMessages.rejected, (state, action) => {
       state.status = "failed";
@@ -77,20 +104,35 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(postMessage.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.messages = action.payload;
-      console.log(action.payload);
+      state.messages.chats = state.messages.chats?.map((chat, idx) => ({
+        ...chat,
+        _id: action.payload[idx]?._id,
+      }));
     });
     builder.addCase(postMessage.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
     });
+
+    //delete chat
+    builder.addCase(deleteMessageAsync.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(deleteMessageAsync.fulfilled, (state, action) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(deleteMessageAsync.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    });
+
     // fetch group chat
     builder.addCase(fetchGroupChat.pending, (state) => {
       state.status = "loading";
     }),
       builder.addCase(fetchGroupChat.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.messages = action.payload.chats;
+        state.messages = action.payload;
         // console.log(action.payload.chats);
       });
     builder.addCase(fetchGroupChat.rejected, (state, action) => {
@@ -112,6 +154,7 @@ export const messagesSlice = createSlice({
   },
 });
 
-export const { addNewMessage, restMessage } = messagesSlice.actions;
+export const { addNewMessage, deleteMessage, restMessage } =
+  messagesSlice.actions;
 
 export default messagesSlice.reducer;

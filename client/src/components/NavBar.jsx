@@ -1,22 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import { BiLogOut } from "react-icons/bi";
 import Avatar from "./Avatar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/user/userSlice";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import {
+  addNewNotification,
+  selectAllNotifications,
+} from "../features/notification/notificationSlice";
+import Notification from "./Notification";
 
-export default function NavBar({ profile }) {
+export default function NavBar({ profile, socket }) {
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const notification = useSelector(selectAllNotifications);
   const navigate = useNavigate();
+  const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    socket?.on("notification", (data) => {
+      dispatch(addNewNotification(data));
+      unReadnotification();
+    });
+  }, [socket]);
+
+  const unReadnotification = () => {
+    const unRead = [];
+    notification?.filter((notif) => {
+      if (notif.markasReaden === false) {
+        unRead.push(notif);
+      }
+    });
+
+    return unRead;
+  };
 
   return (
     <header className="flex  p-2">
       {user !== null ? (
         <nav className=" flex flex-1 gap-2 items-center justify-end">
-          <div className=" relative">
-            <span></span>
+          <div
+            className=" relative"
+            onClick={() => setShowNotification((prev) => !prev)}
+          >
+            {unReadnotification()?.length > 0 && (
+              <span className="absolute cursor-pointer -top-1 -right-2 bg-red-500 text-xs text-white flex items-center justify-center rounded-full w-4 h-4">
+                {unReadnotification()?.length}
+              </span>
+            )}
+
             <IoIosNotificationsOutline size={20} />
+            {showNotification && <Notification />}
           </div>
           <div className="flex flex-col items-center">
             <Avatar style="userProfile" src={profile} />
@@ -28,7 +64,7 @@ export default function NavBar({ profile }) {
               navigate("/");
             }}
           >
-            Logout
+            <BiLogOut size={20} />
           </button>
         </nav>
       ) : (

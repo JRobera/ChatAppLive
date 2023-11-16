@@ -15,8 +15,8 @@ export default function SideBar() {
   return (
     <div className=" border-x-2 h-full w-16 flex flex-col items-center gap-3 pt-5">
       <span className=" font-bold w-full text-center">Chat</span>
-      <nav className="flex gap-6 flex-col items-center justify-center w-full">
-        <NavLink to="." title="All">
+      <nav className="side-bar flex gap-6 flex-col items-center justify-center w-full">
+        <NavLink to="." end title="All">
           <BsBorderAll size={20} />
         </NavLink>
         <NavLink to="person" title="Person">
@@ -28,7 +28,7 @@ export default function SideBar() {
 
         <div
           className=" cursor-pointer"
-          title="Groups"
+          title="Settings"
           onClick={handleShowSetting}
         >
           <IoSettingsOutline size={20} />

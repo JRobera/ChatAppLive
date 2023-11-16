@@ -8,6 +8,7 @@ import ChangePassword from "./ChangePassword";
 import Avatar from "../Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  changeUserProfile,
   getUserStatus,
   selectUser,
   updateUserName,
@@ -29,6 +30,14 @@ export default function Setting({ handleShowSetting }) {
   //   }
   // }, [status]);
 
+  const handleChangeProfile = (e) => {
+    const formData = new FormData();
+    formData.append("user-profile", e.target.files[0]);
+    formData.append("id", user?._id);
+    console.log(e.target.files);
+    dispatch(changeUserProfile(formData));
+  };
+
   return (
     <div className="flex flex-col gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 p-2 rounded-sm bg-[#edeefc] border-2 shadow-sm z-10">
       <div className="flex border-b-2">
@@ -40,7 +49,10 @@ export default function Setting({ handleShowSetting }) {
       <div className="flex flex-col gap-2">
         <div className="relative w-max">
           <Avatar style="changeProfile" src={user?.profile} />
-          <label htmlFor="user-profile" className="absolute right-0 bottom-0">
+          <label
+            htmlFor="user-profile"
+            className="absolute right-0 bottom-0 p-[1px] bg-gray-300 rounded-full hover:cursor-pointer hover:bg-gray-400"
+          >
             <BiEditAlt size={20} color="#fff" />
             <input
               type="file"
@@ -48,6 +60,7 @@ export default function Setting({ handleShowSetting }) {
               id="user-profile"
               accept="image/*"
               hidden
+              onChange={handleChangeProfile}
             />
           </label>
         </div>
@@ -62,6 +75,7 @@ export default function Setting({ handleShowSetting }) {
             }}
           />
           <button
+            className="bg-white rounded-sm p-1"
             onClick={() => {
               console.log(userName);
               dispatch(updateUserName({ _id: user?._id, newName: userName }));
@@ -77,11 +91,17 @@ export default function Setting({ handleShowSetting }) {
         </div>
       </div>
       <div className="flex flex-col justify-start items-start gap-2">
-        <button onClick={() => setChangePassword((prev) => !prev)}>
+        <button
+          className="text-sm hover:underline"
+          onClick={() => setChangePassword((prev) => !prev)}
+        >
           Change Password
         </button>
         {showChangePassword && <ChangePassword />}
-        <button onClick={() => setShowCreateGroup((prev) => !prev)}>
+        <button
+          className="text-sm hover:underline"
+          onClick={() => setShowCreateGroup((prev) => !prev)}
+        >
           Create Group
         </button>
         {showCreateGroup && <CreateGroup />}

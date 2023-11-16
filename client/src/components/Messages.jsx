@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewMessage } from "../features/messages/messageSlice";
 import { parseISO } from "date-fns";
 
-export default function Messages({ socket }) {
+export default function Messages({ socket, setreplyMessage }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.messages.messages);
   const location = useLocation();
@@ -29,20 +29,28 @@ export default function Messages({ socket }) {
     }
   }, [socket]);
 
+  const handleReply = (data) => {
+    // console.log(data);
+    setreplyMessage(data);
+  };
+
   // console.log(messages);
   return (
     <div className=" min-h-[360px] max-h-[360px] overflow-x-auto flex flex-col">
-      {messages?.map((message, idx) => (
+      {messages?.chats?.map((message, idx) => (
         <Message
           key={idx}
           senderId={message?.senderId?._id}
           name={message?.senderId?.fullName}
           type={message?.type}
           message={message?.message}
+          _id={message?._id}
           date={parseISO(message?.time).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
+          replyTo={message?.replyTo}
+          handleReply={handleReply}
         />
       ))}
       {/* <Message type="image" />

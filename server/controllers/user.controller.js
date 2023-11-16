@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import checkRoom from "../lib/checkRoom.js";
+import { uploadToCloudinary } from "../lib/cloudinary.js";
 
 const signUpUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -101,6 +102,32 @@ const changeUserPassword = async (req, res) => {
   }
 };
 
+const changeUserProfile = async (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  try {
+    const profileImg = await uploadToCloudinary(req.file.path, "chat-user");
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          "profile.img": profileImg.url,
+          "profile.public_id": profileImg.public_id,
+        },
+      },
+      { new: true }
+    );
+    const user = {
+      _id: updatedUser._id,
+      fullName: updatedUser.fullName,
+      profile: updatedUser.profile.img,
+    };
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getChats = async (req, res) => {
   const { id } = req.params;
 
@@ -123,4 +150,11 @@ const getChats = async (req, res) => {
   }
 };
 
-export { signUpUser, signInUser, updateUserName, changeUserPassword, getChats };
+export {
+  signUpUser,
+  signInUser,
+  updateUserName,
+  changeUserPassword,
+  changeUserProfile,
+  getChats,
+};

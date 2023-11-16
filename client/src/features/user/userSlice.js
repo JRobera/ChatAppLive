@@ -63,6 +63,21 @@ export const changeUserPassword = createAsyncThunk(
   }
 );
 
+export const changeUserProfile = createAsyncThunk(
+  "user/changeUserProfile",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(
+        "http://localhost:4000/api/change/user-profile",
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (data, { rejectWithValue }) => {
@@ -133,6 +148,20 @@ const userSlice = createSlice({
       console.log(action.payload);
     });
     builder.addCase(changeUserPassword.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+      console.log(action.error.message);
+    });
+    // Change Profile
+    builder.addCase(changeUserProfile.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(changeUserProfile.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      Cookies.set("user", JSON.stringify(action.payload));
+      state.user = action.payload;
+    });
+    builder.addCase(changeUserProfile.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
       console.log(action.error.message);

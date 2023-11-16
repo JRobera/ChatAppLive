@@ -5,6 +5,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 export default function Chat({
   _id,
   profile,
+  admin,
   name,
   lastMessage,
   time,
@@ -14,6 +15,7 @@ export default function Chat({
     _id,
     fullName: name,
     profile: profile,
+    admin: admin,
   };
 
   return (
@@ -29,7 +31,9 @@ export default function Chat({
             {time ? formatDistanceToNow(parseISO(time)) + " ago" : ""}
           </span>
         </div>
-        <span className="text-md text-xs">{lastMessage}</span>
+        <span className="text-md text-xs">
+          {lastMessage && lastMessage?.substring(0, 15) + "..."}
+        </span>
       </div>
     </div>
   );

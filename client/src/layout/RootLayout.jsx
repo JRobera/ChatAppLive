@@ -11,56 +11,93 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/user/userSlice";
 import { io } from "socket.io-client";
 import { restMessage } from "../features/messages/messageSlice";
+import { fetchNotification } from "../features/notification/notificationSlice";
+import CurrentChatInfo from "../components/currentchatinfo/CurrentChatInfo";
+import {
+  fetchGroup,
+  getGroupStatus,
+  selectAllGroup,
+} from "../features/group/groupSlice";
+import {
+  fetchChats,
+  getChatStatus,
+  selectAllChats,
+} from "../features/chats/chatsSlice";
 
 const socket = io("http://localhost:4000");
 
 export default function RootLayout() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const chats = useSelector(selectAllChats);
+  const chatStatus = useSelector(getChatStatus);
+  const groups = useSelector(selectAllGroup);
+  const groupStatus = useSelector(getGroupStatus);
   const [currentChat, setCurrentChat] = useState(null);
-  const location = useLocation();
+  const [replyMessage, setreplyMessage] = useState(null);
+  const [filterdChats, setFilterdChats] = useState([]);
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const handleFilteredUsers = (data) => {
+    setFilterdChats(data);
+  };
+  const selectList = () => {
+    if (location.pathname === "/home/person") {
+      return chats;
+    } else if (location.pathname === "/home/group") {
+      return groups;
+    }
+  };
 
   useEffect(() => {
     if (user === null) {
       console.log(user);
       return navigate("/");
     }
+    socket.emit("user-data", user?._id);
+    dispatch(fetchNotification(user?._id));
+    dispatch(fetchChats(user?._id));
+    dispatch(fetchGroup(user?._id));
+    setFilterdChats(selectList());
   }, []);
 
   useEffect(() => {
     dispatch(restMessage());
   }, [currentChat]);
+  useEffect(() => {
+    setFilterdChats(selectList());
+  }, [location.pathname]);
 
   return (
     <div className="flex h-full">
       <SideBar />
       <div className="flex-1">
-        <NavBar profile={user?.profile} />
+        <NavBar profile={user?.profile} socket={socket} />
         <div className="chatWindow flex m-2 border-2 min-h-[480px] max-h-[485px] overflow-x-auto rounded-md">
-          <div className="border-r-2 flex-1 pt-2 flex flex-col">
-            <SearchBar />
-            <Outlet context={[setCurrentChat, socket]} />
-          </div>
-          <div className="flex-[2]">
-            <div className="border-b-2 flex justify-between items-center pr-2 min-h-[54px]">
-              {currentChat && (
-                <div className="flex gap-2 p-2 items-center">
-                  <Avatar style="chatProfile" src={currentChat?.profile} />
-                  <div className="text-sm font-semibold">
-                    {currentChat?.fullName}
-                  </div>
-                </div>
-              )}
-              {location.pathname === "/home/group" ? (
-                <span className="flex-1 flex justify-end">
-                  <BsPlusLg size={20} />
-                </span>
-              ) : null}
+          {chatStatus === "loading" || groupStatus === "loading" ? (
+            <div>Loading...</div>
+          ) : (
+            <div className="border-r-2 flex-1 pt-2 flex flex-col">
+              <SearchBar
+                list={selectList()}
+                handleFilteredUsers={handleFilteredUsers}
+              />
+              <Outlet context={[filterdChats, setCurrentChat, socket]} />
             </div>
-            <Messages socket={socket} />
-            <InputComponent socket={socket} currentChat={currentChat} />
+          )}
+          <div className="flex-[2]">
+            {/* Current Chat Info Bar */}
+            <CurrentChatInfo currentChat={currentChat} />
+
+            <Messages socket={socket} setreplyMessage={setreplyMessage} />
+            <InputComponent
+              socket={socket}
+              currentChat={currentChat}
+              replyMessage={replyMessage}
+              setreplyMessage={setreplyMessage}
+            />
           </div>
         </div>
       </div>

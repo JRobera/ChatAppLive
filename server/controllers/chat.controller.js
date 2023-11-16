@@ -20,19 +20,60 @@ const getMessageForRoom = async (req, res) => {
 };
 
 const addMessageToRoom = async (req, res) => {
-  const { senderId, message, time, user, currentChat, type } = req.body;
+  const { senderId, replyTo, message, time, user, currentChat, type } =
+    req.body;
 
   const foundRoom = await checkRoom(user, currentChat);
-  console.log(foundRoom.room);
   // const chat = { message: message, time: time, senderId: senderId, type: type };
   try {
-    const foundRoomChat = await Chat.findOneAndUpdate(
-      { room: foundRoom.room },
-      { $push: { chats: { message, time, senderId, type } } }
-    );
+    if (!replyTo) {
+      const foundRoomChat = await Chat.findOneAndUpdate(
+        { room: foundRoom.room },
+        {
+          $push: {
+            chats: { message, time, senderId, type },
+          },
+        },
+        { new: true }
+      );
+      // console.log(foundRoomChat);
+      res.status(200).json(foundRoomChat.chats);
+    } else {
+      const foundRoomChat = await Chat.findOneAndUpdate(
+        { room: foundRoom.room },
+        {
+          $push: {
+            chats: { message, time, senderId, replyTo, type },
+          },
+        },
+        { new: true }
+      );
+      // console.log(foundRoomChat);
+      res.status(200).json(foundRoomChat.chats);
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
-export { getMessageForRoom, addMessageToRoom };
+const updateMessage = async (req, res) => {
+  const { room, _id } = req.body;
+  // const updatedChat = await Chat.findByIdAndUpdate({room:room},{})
+};
+
+const deleteMessage = async (req, res) => {
+  const { room, _id } = req.body;
+  try {
+    const newchat = await Chat.findOneAndUpdate(
+      { room: room },
+      { $pull: { chats: { _id: _id } } },
+      { new: true }
+    );
+    // console.log(newchat);
+    res.status(200).json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getMessageForRoom, addMessageToRoom, deleteMessage };
