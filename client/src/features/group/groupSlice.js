@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../axios";
 
 const initialState = {
   status: "idle",
@@ -10,78 +10,61 @@ const initialState = {
 
 export const createGroup = createAsyncThunk(
   "group/createGroup",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
-      const res = await axios.post(
-        "http://localhost:4000/api/create-group",
-        data
-      );
+      const res = await api.post("/api/create-group", data);
       return res.data;
     } catch (err) {
-      console.log(err);
-      return rejectWithValue(err.response.data);
+      throw err;
     }
   }
 );
 
 export const updateGroupProfile = createAsyncThunk(
   "group/updateGroupProfile",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/update-group/profile",
-        data
-      );
+      const res = await api.put("/api/update-group/profile", data);
       return res.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      throw error;
     }
   }
 );
 
 export const addMemberToGroup = createAsyncThunk(
   "group/addMemberToGroup",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/add-group/member",
-        data
-      );
+      const res = await api.put("/api/add-group/member", data);
       return res.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      throw error;
     }
   }
 );
 export const removeMemberFromGroup = createAsyncThunk(
   "group/removeMemberFromGroup",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/delete-group/member",
-        data
-      );
+      const res = await api.put("/api/delete-group/member", data);
       return res.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      throw error;
     }
   }
 );
 
-export const fetchGroup = createAsyncThunk(
-  "group/fetchGroup",
-  async (data, { rejectWithValue }) => {
-    try {
-      const res = await axios(`http://localhost:4000/api/get-groups/${data}`);
-      return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
-      }
-      return rejectWithValue(err.response.data);
+export const fetchGroup = createAsyncThunk("group/fetchGroup", async (data) => {
+  try {
+    const res = await api(`/api/get-groups/${data}`);
+    return res.data;
+  } catch (err) {
+    if (!err.response) {
+      throw err;
     }
   }
-);
+});
 
 export const groupSlice = createSlice({
   name: "group",

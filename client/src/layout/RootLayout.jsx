@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import api from "../features/axios";
 import { BsPlusLg } from "react-icons/bs";
 import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
@@ -25,7 +26,7 @@ import {
   selectAllChats,
 } from "../features/chats/chatsSlice";
 
-const socket = io("http://localhost:4000");
+const socket = io(api.defaults.baseURL);
 
 export default function RootLayout() {
   const dispatch = useDispatch();
@@ -40,7 +41,6 @@ export default function RootLayout() {
 
   const location = useLocation();
   const navigate = useNavigate();
-
   const handleFilteredUsers = (data) => {
     setFilterdChats(data);
   };
@@ -81,7 +81,9 @@ export default function RootLayout() {
         <NavBar profile={user?.profile} socket={socket} />
         <div className="chatWindow flex m-2 border-2 min-h-[480px] max-h-[485px] overflow-x-auto rounded-md">
           {chatStatus === "loading" || groupStatus === "loading" ? (
-            <div>Loading...</div>
+            <div className="border-r-2 flex-1 pt-2 flex flex-col">
+              Loading...
+            </div>
           ) : (
             <div className="border-r-2 flex-1 pt-2 flex flex-col">
               <SearchBar

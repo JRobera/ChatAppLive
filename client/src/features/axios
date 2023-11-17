@@ -1,0 +1,7 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "https://mern-chat-app-u5fb.onrender.com/",
+});
+
+export default api;

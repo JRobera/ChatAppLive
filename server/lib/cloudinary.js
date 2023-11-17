@@ -12,7 +12,7 @@ cloudinary.config({
 const uploadToCloudinary = async (path, folder) => {
   return cloudinary.v2.uploader
     .upload(path, {
-      resource_type: "image",
+      resource_type: "auto",
       folder,
     })
     .then((data) => {

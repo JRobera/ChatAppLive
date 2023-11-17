@@ -1,18 +1,12 @@
-import axios from "axios";
+import api from "../features/axios";
 
 const uploadChatImage = async (data) => {
-  const res = await axios.post(
-    "http://localhost:4000/api/upload/chat-image",
-    data
-  );
+  const res = await api.post("/api/upload/chat-image", data);
   return res.data.data;
 };
 
 const uploadChatAudio = async (data) => {
-  const res = await axios.post(
-    "http://localhost:4000/api/upload/chat-audio",
-    data
-  );
+  const res = await api.post("/api/upload/chat-audio", data);
   return res.data.data;
 };
 

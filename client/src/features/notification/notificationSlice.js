@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../axios";
 
 const initialState = {
   status: "idle",
@@ -10,9 +10,7 @@ const initialState = {
 export const fetchNotification = createAsyncThunk(
   "notification/fetchNotification",
   async (data) => {
-    const res = await axios.get(
-      `http://localhost:4000/api/get/notification/${data}`
-    );
+    const res = await api.get(`/api/get/notification/${data}`);
 
     return res.data;
   }
@@ -21,10 +19,7 @@ export const fetchNotification = createAsyncThunk(
 export const addNotification = createAsyncThunk(
   "notification/addNotification",
   async (data) => {
-    const res = await axios.post(
-      "http://localhost:4000/api/add/notification",
-      data
-    );
+    const res = await api.post("/api/add/notification", data);
     return res.data;
   }
 );
@@ -32,20 +27,14 @@ export const addNotification = createAsyncThunk(
 export const markAsReadenAsync = createAsyncThunk(
   "notification/markAsReadenAsync",
   async (data) => {
-    const res = await axios.put(
-      "http://localhost:4000/api/mark-as-readen",
-      data
-    );
+    const res = await api.put("/api/mark-as-readen", data);
     return res.data;
   }
 );
 export const deleteNotificationAsync = createAsyncThunk(
   "notification/deleteNotificationAsync",
   async (data) => {
-    const res = await axios.put(
-      "http://localhost:4000/api/delete/notification",
-      data
-    );
+    const res = await api.put("/api/delete/notification", data);
     return res.data;
   }
 );

@@ -1,8 +1,5 @@
 import checkRoom from "../lib/checkRoom.js";
-import {
-  uploadToCloudinary,
-  uploadAudioToCloudinary,
-} from "../lib/cloudinary.js";
+import { uploadToCloudinary } from "../lib/cloudinary.js";
 import Chat from "../models/chat.model.js";
 import User from "../models/user.model.js";
 
@@ -101,7 +98,7 @@ const uploadImage = async (req, res) => {
 };
 const uploadAudio = async (req, res) => {
   try {
-    const uploadedAudio = await uploadAudioToCloudinary(
+    const uploadedAudio = await uploadToCloudinary(
       req.file.path,
       "chat-message-audio"
     );

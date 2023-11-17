@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../axios";
 
 const initialState = {
   status: "idle",
@@ -10,7 +10,7 @@ export const fetchChats = createAsyncThunk(
   "chats/fetchChats",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/chats/${id}`);
+      const res = await api.get(`/api/chats/${id}`);
       return res.data;
     } catch (err) {
       if (!err.response) {

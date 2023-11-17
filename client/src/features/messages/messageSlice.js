@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../axios";
 
 const initialState = {
   status: "idle",
@@ -11,7 +12,7 @@ export const fetchMessages = createAsyncThunk(
   "messages/fetchMessages",
   async (data) => {
     const query = new URLSearchParams(data).toString();
-    const res = await axios.get(`http://localhost:4000/api/messages?${query}`);
+    const res = await api.get(`/api/messages?${query}`);
     return res.data;
   }
 );
@@ -19,7 +20,7 @@ export const fetchMessages = createAsyncThunk(
 export const postMessage = createAsyncThunk(
   "message/postMessage",
   async (data) => {
-    const res = await axios.post("http://localhost:4000/api/add/message", data);
+    const res = await api.post("/api/add/message", data);
     return res.data;
   }
 );
@@ -27,10 +28,7 @@ export const postMessage = createAsyncThunk(
 export const deleteMessageAsync = createAsyncThunk(
   "messages/deleteMessage",
   async (data) => {
-    const res = await axios.put(
-      "http://localhost:4000/api/delete/message",
-      data
-    );
+    const res = await api.put("/api/delete/message", data);
     return res.data;
   }
 );
@@ -39,9 +37,7 @@ export const fetchGroupChat = createAsyncThunk(
   "groupchat/fetchGroupChat",
   async (data) => {
     const query = new URLSearchParams(data).toString();
-    const res = await axios(
-      `http://localhost:4000/api/get-group/chat?${query}`
-    );
+    const res = await api(`/api/get-group/chat?${query}`);
     return res.data;
   }
 );
@@ -49,10 +45,7 @@ export const fetchGroupChat = createAsyncThunk(
 export const postGroupMessage = createAsyncThunk(
   "groupmessage/postGroupMessage",
   async (data) => {
-    const res = await axios.post(
-      "http://localhost:4000/api/add-group/message",
-      data
-    );
+    const res = await api.post("/api/add-group/message", data);
     return res.data;
   }
 );
@@ -60,10 +53,7 @@ export const postGroupMessage = createAsyncThunk(
 export const deleteGroupMessageAsync = createAsyncThunk(
   "messages/deleteMessage",
   async (data) => {
-    const res = await axios.put(
-      "http://localhost:4000/api/delete/group/message",
-      data
-    );
+    const res = await api.put("/api/delete/group/message", data);
     return res.data;
   }
 );

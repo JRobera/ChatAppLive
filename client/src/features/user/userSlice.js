@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import Cookies from "js-cookie";
+import api from "../axios";
 
 const initialState = {
   user:
@@ -15,7 +15,7 @@ export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (data) => {
     try {
-      const res = await axios.post("http://localhost:4000/api/signup", data);
+      const res = await api.post("/api/signup", data);
       return res.data;
     } catch (error) {
       if (!error.response) {
@@ -29,10 +29,7 @@ export const updateUserName = createAsyncThunk(
   "userName/updateUserName",
   async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/update/user-name",
-        data
-      );
+      const res = await api.put("/api/update/user-name", data);
       return res.data;
     } catch (error) {
       if (!error.response) {
@@ -45,10 +42,7 @@ export const changeUserPassword = createAsyncThunk(
   "changePassword/changeUserPassword",
   async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/change/user-password",
-        data
-      );
+      const res = await api.put("/api/change/user-password", data);
       return res.data;
     } catch (error) {
       if (!error.response) {
@@ -62,10 +56,7 @@ export const changeUserProfile = createAsyncThunk(
   "user/changeUserProfile",
   async (data) => {
     try {
-      const res = await axios.put(
-        "http://localhost:4000/api/change/user-profile",
-        data
-      );
+      const res = await api.put("/api/change/user-profile", data);
       return res.data;
     } catch (error) {
       if (!error.response) {
@@ -77,7 +68,7 @@ export const changeUserProfile = createAsyncThunk(
 
 export const loginUser = createAsyncThunk("user/loginUser", async (data) => {
   try {
-    const res = await axios.post("http://localhost:4000/api/signin", data);
+    const res = await api.post("/api/signin", data);
     return res.data;
   } catch (error) {
     if (!error.response) {
@@ -103,12 +94,12 @@ const userSlice = createSlice({
       Cookies.set("user", JSON.stringify(action.payload.data));
       state.user = action.payload.data;
       state.message = action.payload.message;
-      console.log(action.payload);
+      // console.log(action.payload);
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload.error;
-      console.log(action);
+      // console.log(action);
     });
     // Login
     builder.addCase(loginUser.pending, (state) => {
