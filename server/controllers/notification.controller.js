@@ -5,15 +5,15 @@ const getNotification = async (req, res) => {
   try {
     const notification = await Notification.findOne({
       userId: userId,
-    }).populate("notifications.senderId");
+    }).populate({ path: "notifications.senderId", sort: { $natural: -1 } });
     if (notification) {
-      res.status(200).json(notification);
+      res.status(200).json({ data: notification });
     } else {
       const newNotification = await Notification.create({
         userId,
         notifications: [],
       });
-      res.status(201).json(newNotification);
+      res.status(201).json({ data: newNotification });
     }
   } catch (error) {
     console.log(error);

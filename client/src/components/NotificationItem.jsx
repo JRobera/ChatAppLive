@@ -42,7 +42,17 @@ export default function NotificationItem({
       <span className="text-xs text-[#878ef8] font-bold inline-block mb-2">
         {name}
       </span>
-      <p className=" text-sm pb-1">{message}</p>
+      {type === "text" ? (
+        <p className=" text-sm pb-1">{message}</p>
+      ) : type === "image" ? (
+        <img
+          src={message}
+          className=" w-12 h-12 rounded-sm pb-1"
+          alt="image in notification"
+        />
+      ) : (
+        <audio src={message} controls className="w-full pb-1"></audio>
+      )}
       <span className="absolute right-1 text-xs -bottom-3 text-[#afafb3]">
         {formatDistanceToNow(parseISO(date)) + " age"}
       </span>

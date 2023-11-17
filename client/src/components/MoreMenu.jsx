@@ -25,7 +25,7 @@ export default function MoreMenu({
   };
   const handleDeleteMessage = () => {
     dispatch(deleteMessage(_id));
-    if (location.path === "/home/person") {
+    if (location.pathname === "/home/person") {
       dispatch(deleteMessageAsync({ room: messages?.room, _id: _id }));
     } else {
       dispatch(

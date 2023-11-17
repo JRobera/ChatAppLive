@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { PiPlusMinus } from "react-icons/pi";
@@ -8,6 +10,12 @@ import { selectUser } from "../../features/user/userSlice";
 import EditGroup from "./EditGroup";
 import EditGroupMember from "./EditGroupMember";
 import { fetchChats } from "../../features/chats/chatsSlice";
+import {
+  getGroupError,
+  getGroupMessage,
+  getGroupStatus,
+  setGroupStatus,
+} from "../../features/group/groupSlice";
 
 export default function CurrentChatInfo({ currentChat }) {
   const dispatch = useDispatch();
@@ -16,9 +24,23 @@ export default function CurrentChatInfo({ currentChat }) {
   const [showEditGroup, setShowEditGroup] = useState(false);
   const [showEditGroupMember, setShowEditGroupMember] = useState(false);
 
+  const groupStatus = useSelector(getGroupStatus);
+  const groupMessage = useSelector(getGroupMessage);
+  const groupError = useSelector(getGroupError);
+
   useEffect(() => {
-    dispatch(fetchChats(user?._id));
-  }, []);
+    if (groupStatus === "suceeded") {
+      toast.success(groupMessage);
+      dispatch(setGroupStatus("idle"));
+    } else if (groupStatus === "failed") {
+      toast.error(groupError);
+      dispatch(setGroupStatus("idle"));
+    }
+  }, [groupStatus]);
+
+  // useEffect(() => {
+  // dispatch(fetchChats(user?._id));
+  // }, []);
 
   return (
     <div className="border-b-2 flex justify-between items-center pr-2 min-h-[54px] relative">
@@ -28,8 +50,7 @@ export default function CurrentChatInfo({ currentChat }) {
           <div className="text-sm font-semibold">{currentChat?.fullName}</div>
         </div>
       )}
-      {location.pathname === "/home/group" &&
-      currentChat?.admin === user?._id ? (
+      {currentChat?.admin === user?._id ? (
         <div className="flex gap-2">
           <span
             className="flex-1 flex justify-end p-1 cursor-pointer hover:bg-[#edeefc] hover:rounded-sm "

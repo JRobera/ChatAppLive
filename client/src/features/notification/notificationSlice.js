@@ -83,7 +83,7 @@ export const notificationSlice = createSlice({
     });
     builder.addCase(fetchNotification.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.notification = action.payload;
+      state.notification = action.payload.data;
     });
     builder.addCase(fetchNotification.rejected, (state, action) => {
       state.error = action.error.message;
@@ -91,8 +91,10 @@ export const notificationSlice = createSlice({
   },
 });
 
-export const selectAllNotifications = (state) =>
-  state.notification.notification.notifications;
+export const selectAllNotifications = (state) => {
+  const reverseNotification = state.notification?.notification?.notifications;
+  return reverseNotification;
+};
 
 export const { addNewNotification, markAsReaden, deleteNotification } =
   notificationSlice.actions;

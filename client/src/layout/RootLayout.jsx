@@ -17,6 +17,7 @@ import {
   fetchGroup,
   getGroupStatus,
   selectAllGroup,
+  setGroupStatus,
 } from "../features/group/groupSlice";
 import {
   fetchChats,
@@ -48,6 +49,8 @@ export default function RootLayout() {
       return chats;
     } else if (location.pathname === "/home/group") {
       return groups;
+    } else if (location.pathname === "/home") {
+      return [...chats, ...groups];
     }
   };
 
@@ -61,6 +64,7 @@ export default function RootLayout() {
     dispatch(fetchChats(user?._id));
     dispatch(fetchGroup(user?._id));
     setFilterdChats(selectList());
+    dispatch(setGroupStatus("idle"));
   }, []);
 
   useEffect(() => {

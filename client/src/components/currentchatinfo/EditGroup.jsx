@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateGroupProfile } from "../../features/group/groupSlice";
 
 export default function EditGroup({ currentChat }) {
@@ -21,6 +21,7 @@ export default function EditGroup({ currentChat }) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
   const submit = (data) => {
@@ -29,7 +30,7 @@ export default function EditGroup({ currentChat }) {
     formData.append("group_id", currentChat?._id);
     formData.append("group_profile", groupNewProfile);
     dispatch(updateGroupProfile(formData));
-    console.log(formData);
+    reset();
     setGroupNewProfile(null);
   };
 

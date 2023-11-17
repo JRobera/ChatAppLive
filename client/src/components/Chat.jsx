@@ -10,6 +10,7 @@ export default function Chat({
   lastMessage,
   time,
   selectCurrentChat,
+  chatType,
 }) {
   const user = {
     _id,
@@ -21,7 +22,7 @@ export default function Chat({
   return (
     <div
       className=" bg-[#ffffff] cursor-pointer w-full flex gap-2 items-center p-2 hover:bg-[#edeefc]"
-      onClick={() => selectCurrentChat(user)}
+      onClick={() => selectCurrentChat(user, chatType)}
     >
       <Avatar style="chatProfile" src={profile} />
       <div className="flex-1">

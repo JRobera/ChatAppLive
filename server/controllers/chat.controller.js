@@ -1,4 +1,8 @@
 import checkRoom from "../lib/checkRoom.js";
+import {
+  uploadToCloudinary,
+  uploadAudioToCloudinary,
+} from "../lib/cloudinary.js";
 import Chat from "../models/chat.model.js";
 import User from "../models/user.model.js";
 
@@ -20,8 +24,16 @@ const getMessageForRoom = async (req, res) => {
 };
 
 const addMessageToRoom = async (req, res) => {
-  const { senderId, replyTo, message, time, user, currentChat, type } =
-    req.body;
+  const {
+    senderId,
+    replyTo,
+    message,
+    time,
+    user,
+    currentChat,
+    type,
+    public_id,
+  } = req.body;
 
   const foundRoom = await checkRoom(user, currentChat);
   // const chat = { message: message, time: time, senderId: senderId, type: type };
@@ -31,7 +43,7 @@ const addMessageToRoom = async (req, res) => {
         { room: foundRoom.room },
         {
           $push: {
-            chats: { message, time, senderId, type },
+            chats: { message, time, senderId, type, public_id },
           },
         },
         { new: true }
@@ -43,7 +55,7 @@ const addMessageToRoom = async (req, res) => {
         { room: foundRoom.room },
         {
           $push: {
-            chats: { message, time, senderId, replyTo, type },
+            chats: { message, time, senderId, replyTo, type, public_id },
           },
         },
         { new: true }
@@ -76,4 +88,33 @@ const deleteMessage = async (req, res) => {
   }
 };
 
-export { getMessageForRoom, addMessageToRoom, deleteMessage };
+const uploadImage = async (req, res) => {
+  try {
+    const uploadedImage = await uploadToCloudinary(
+      req.file.path,
+      "chat-message-image"
+    );
+    res.status(200).json({ data: uploadedImage });
+  } catch (error) {
+    res.json("Something went wrong!");
+  }
+};
+const uploadAudio = async (req, res) => {
+  try {
+    const uploadedAudio = await uploadAudioToCloudinary(
+      req.file.path,
+      "chat-message-audio"
+    );
+    res.status(200).json({ data: uploadedAudio });
+  } catch (error) {
+    res.json("Something went wrong!");
+  }
+};
+
+export {
+  getMessageForRoom,
+  addMessageToRoom,
+  deleteMessage,
+  uploadAudio,
+  uploadImage,
+};

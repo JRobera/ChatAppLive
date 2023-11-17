@@ -64,14 +64,33 @@ export default function Message({
             : " m-2 p-2 bg-[#f5f5f5] rounded-md w-1/2 relative"
         }
       >
+        <div
+          className="absolute right-1 top-1 cursor-pointer"
+          onClick={handleMore}
+        >
+          <TfiMore size={20} />
+        </div>
+        {replyTo && <ReplyHead name={replyTo.name} message={replyTo.message} />}
+        <span className="text-xs text-[#878ef8] font-bold inline-block mb-2">
+          {name}
+        </span>
         <img
           className=" w-full h-60 rounded-md object-cover"
-          src="../public/assets/profile.jpg"
+          src={message}
           alt="image"
         />
         <span className="absolute right-1 text-xs -bottom-3 text-[#c3c3c4]">
           {date}
         </span>
+        {showMore && (
+          <MoreMenu
+            handleMore={handleMore}
+            handleReply={handleReply}
+            name={name}
+            message={message}
+            _id={_id}
+          />
+        )}
       </div>
     );
   } else {
@@ -79,14 +98,33 @@ export default function Message({
       <div
         className={
           user?._id === senderId
-            ? " m-2 p-2 bg-[#edeefc] rounded-md w-1/2 relative self-end"
-            : " m-2 p-2 bg-[#f5f5f5] rounded-md w-1/2 relative"
+            ? " m-2 p-2 bg-[#edeefc] rounded-md w-4/5 md:w-3/5 relative self-end"
+            : " m-2 p-2 bg-[#f5f5f5] rounded-md w-4/5 md:w-3/5 relative"
         }
       >
-        <audio src=""></audio>
+        <div
+          className="absolute right-1 top-1 cursor-pointer"
+          onClick={handleMore}
+        >
+          <TfiMore size={20} />
+        </div>
+        {replyTo && <ReplyHead name={replyTo.name} message={replyTo.message} />}
+        <span className="text-xs text-[#878ef8] font-bold inline-block mb-2">
+          {name}
+        </span>
+        <audio src={message} controls className="w-full"></audio>
         <span className="absolute right-1 text-xs -bottom-3 text-[#3f4080]">
           {date}
         </span>
+        {showMore && (
+          <MoreMenu
+            handleMore={handleMore}
+            handleReply={handleReply}
+            name={name}
+            message={message}
+            _id={_id}
+          />
+        )}
       </div>
     );
   }

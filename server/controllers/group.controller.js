@@ -19,7 +19,9 @@ const createGroup = async (req, res) => {
       },
       members: admin,
     });
-    res.status(201).json({ data: newGroup, message: "Group created!" });
+    res
+      .status(201)
+      .json({ data: newGroup, message: "Group Created Successfully" });
   } else {
     try {
       const newGroup = await Group.create({
@@ -31,6 +33,7 @@ const createGroup = async (req, res) => {
       res.status(201).json({ data: newGroup, message: "Group created!" });
     } catch (error) {
       console.log(error);
+      res.status(400).json({ error: error });
     }
   }
 };
@@ -40,10 +43,12 @@ const getGroups = async (req, res) => {
   try {
     const groups = await Group.find({
       $or: [{ public_group: true }, { members: { $in: [_id] } }],
-    });
-    res.status(200).json(groups);
+    }).sort({ updatedAt: -1 });
+    res
+      .status(200)
+      .json({ data: groups, message: "Groups Fetched Successfully" });
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 
@@ -97,55 +102,87 @@ const deleteGroupMessage = async (req, res) => {
 // update group name or profile Or Both
 const updateGroupProfile = async (req, res) => {
   const { groupName, group_id } = req.body;
-  if (req.file) {
-    const newgroupProfile = await uploadToCloudinary(
-      req.file.path,
-      "group-profiles"
-    );
-    const updateGroup = await Group.findOneAndUpdate(
-      { _id: group_id },
-      {
-        $set: {
-          groupName: groupName,
-          "profile.img": newgroupProfile.url,
-          "profile.public_id": newgroupProfile.public_id,
+  try {
+    if (req.file) {
+      const newgroupProfile = await uploadToCloudinary(
+        req.file.path,
+        "group-profiles"
+      );
+      const updateGroup = await Group.findOneAndUpdate(
+        { _id: group_id },
+        {
+          $set: {
+            groupName: groupName,
+            "profile.img": newgroupProfile.url,
+            "profile.public_id": newgroupProfile.public_id,
+          },
         },
-      },
-      { new: true }
-    );
-    res.status(200).json(updateGroup);
-  } else {
-    const updateGroup = await Group.findOneAndUpdate(
-      { _id: group_id },
-      { $set: { groupName: groupName } },
-      { new: true }
-    );
-    res.status(200).json(updateGroup);
+        { new: true }
+      );
+      res
+        .status(200)
+        .json({ data: updateGroup, message: "Group Profile Updated" });
+    } else {
+      const updateGroup = await Group.findOneAndUpdate(
+        { _id: group_id },
+        { $set: { groupName: groupName } },
+        { new: true }
+      );
+      res
+        .status(200)
+        .json({ data: updateGroup, message: "Group Name Updated" });
+    }
+  } catch (error) {
+    res.json({ error: error });
   }
 };
 
 const addMembersToGroup = async (req, res) => {
   const { id, group_id } = req.body;
   try {
-    const updateGroupMembers = await Group.findOneAndUpdate(
-      { _id: group_id },
-      { $push: { members: id } }
-    );
-    res.status(200).json(updateGroupMembers);
+    const foundUser = await Group.findOne({
+      _id: group_id,
+      members: { $in: [id] },
+    });
+
+    if (!foundUser) {
+      const updateGroupMembers = await Group.findOneAndUpdate(
+        { _id: group_id },
+        { $push: { members: id } }
+      );
+      res.status(200).json({
+        data: updateGroupMembers,
+        message: "Member Added Successfully",
+      });
+    } else {
+      res.status(409).json({ error: "User Is Already A Member" });
+    }
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 const removeMembersToGroup = async (req, res) => {
   const { id, group_id } = req.body;
   try {
-    const updateGroupMembers = await Group.findOneAndUpdate(
-      { _id: group_id },
-      { $pull: { members: id } }
-    );
-    res.status(200).json(updateGroupMembers);
+    const foundUser = await Group.findOne({
+      _id: group_id,
+      members: { $in: [id] },
+    });
+
+    if (foundUser) {
+      const updateGroupMembers = await Group.findOneAndUpdate(
+        { _id: group_id },
+        { $pull: { members: id } }
+      );
+      res.status(200).json({
+        data: updateGroupMembers,
+        message: "Member Removed Successfully",
+      });
+    } else {
+      res.status(409).json({ error: "User Is Already Removed" });
+    }
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 

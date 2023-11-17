@@ -10,6 +10,7 @@ const ChatSchema = new Schema(
         senderId: { type: Schema.Types.ObjectId, ref: "user" },
         replyTo: { name: { type: String }, message: { type: String } },
         type: { type: String },
+        public_id: { type: String },
       },
     ],
   },

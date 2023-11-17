@@ -73,7 +73,7 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     addNewMessage: (state, action) => {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.messages?.chats?.push(action.payload);
     },
     deleteMessage: (state, action) => {
@@ -96,7 +96,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(fetchMessages.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
     // post new massage to db
     builder.addCase(postMessage.pending, (state) => {
@@ -111,7 +111,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(postMessage.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
 
     //delete chat
@@ -123,7 +123,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(deleteMessageAsync.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
 
     // fetch group chat
@@ -136,7 +136,7 @@ export const messagesSlice = createSlice({
         // console.log(action.payload.chats);
       });
     builder.addCase(fetchGroupChat.rejected, (state, action) => {
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
     // post new group massage to db
     builder.addCase(postGroupMessage.pending, (state) => {
@@ -145,11 +145,11 @@ export const messagesSlice = createSlice({
     builder.addCase(postGroupMessage.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.messages = action.payload;
-      console.log(action.payload);
+      // console.log(action.payload);
     });
     builder.addCase(postGroupMessage.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
   },
 });

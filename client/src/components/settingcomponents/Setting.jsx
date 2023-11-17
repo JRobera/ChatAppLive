@@ -9,26 +9,33 @@ import Avatar from "../Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeUserProfile,
+  getUserError,
+  getUserMessage,
   getUserStatus,
   selectUser,
+  setUserStatus,
   updateUserName,
 } from "../../features/user/userSlice";
 
 export default function Setting({ handleShowSetting }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const status = useSelector(getUserStatus);
+  const userStatus = useSelector(getUserStatus);
+  const userError = useSelector(getUserError);
+  const userMessage = useSelector(getUserMessage);
   const [userName, setUserName] = useState(user?.fullName);
   const [showChangePassword, setChangePassword] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
 
-  // useEffect(() => {
-  //   if (status === "succeeded") {
-  //     toast.success("Name Chageded");
-  //   } else if (status === "failed") {
-  //     toast.error("Something went wrong!");
-  //   }
-  // }, [status]);
+  useEffect(() => {
+    if (userStatus === "succeeded") {
+      toast.success(userMessage);
+      dispatch(setUserStatus("idle"));
+    } else if (userStatus === "failed") {
+      toast.error(userError);
+      dispatch(setUserStatus("idle"));
+    }
+  }, [userStatus]);
 
   const handleChangeProfile = (e) => {
     const formData = new FormData();
@@ -77,13 +84,7 @@ export default function Setting({ handleShowSetting }) {
           <button
             className="bg-white rounded-sm p-1"
             onClick={() => {
-              console.log(userName);
               dispatch(updateUserName({ _id: user?._id, newName: userName }));
-              if (status === "succeeded") {
-                toast.success("Name Chageded");
-              } else if (status === "failed") {
-                toast.error("Something went wrong!");
-              }
             }}
           >
             Edit

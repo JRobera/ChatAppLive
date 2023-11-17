@@ -8,15 +8,18 @@ import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserError,
+  getUserMessage,
   getUserStatus,
   loginUser,
   selectUser,
+  setUserStatus,
 } from "../features/user/userSlice";
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const userStatus = useSelector(getUserStatus);
+  const userMessage = useSelector(getUserMessage);
   const userError = useSelector(getUserError);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -47,14 +50,15 @@ export default function SignIn() {
 
   const submit = (data) => {
     dispatch(loginUser(data));
-
     reset();
   };
   useEffect(() => {
     if (userStatus === "succeeded") {
-      toast.success("Signed in successfully");
+      toast.success(userMessage);
+      dispatch(setUserStatus("idle"));
     } else if (userStatus === "failed") {
       toast.error(userError);
+      dispatch(setUserStatus("idle"));
     }
   }, [userStatus]);
 

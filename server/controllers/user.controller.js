@@ -19,15 +19,18 @@ const signUpUser = async (req, res) => {
           password: hash,
         }).then((response) =>
           res.status(201).json({
-            _id: response._id,
-            fullName: response.fullName,
-            profile: response.profile.img,
+            data: {
+              _id: response._id,
+              fullName: response.fullName,
+              profile: response.profile.img,
+            },
+            message: "User Successfuly Registerd",
           })
         );
       });
     });
   } else {
-    res.status(409).json({ message: "User already exists!" });
+    res.status(409).json({ error: "User already exists!" });
   }
 };
 const signInUser = async (req, res) => {
@@ -41,9 +44,9 @@ const signInUser = async (req, res) => {
           fullName: foundUser.fullName,
           profile: foundUser.profile.img,
         };
-        res.status(202).json(user);
+        res.status(202).json({ data: user, message: "Successfully Logged in" });
       } else {
-        res.status(403).json("Incorrect password!");
+        res.status(403).json({ error: "Incorrect password!" });
       }
     });
   } else {
@@ -64,10 +67,11 @@ const updateUserName = async (req, res) => {
         fullName: newName,
         profile: foundUser.profile.img,
       };
-      res.status(200).json(user);
+      res
+        .status(200)
+        .json({ data: user, message: "User Name Successfully Updated" });
     }
   } catch (error) {
-    console.log(error);
     res.json({ error: error });
   }
 };
@@ -86,13 +90,14 @@ const changeUserPassword = async (req, res) => {
                     { _id: _id },
                     { password: hash }
                   );
-                  res.status(200).json({ message: "Successfully updated" });
+                  res
+                    .status(200)
+                    .json({ message: "Password Successfully updated" });
                 }
               });
             }
           });
         } else {
-          console.log("error p");
           res.status(403).json({ error: "Incorrect Password" });
         }
       });
@@ -104,7 +109,6 @@ const changeUserPassword = async (req, res) => {
 
 const changeUserProfile = async (req, res) => {
   const { id } = req.body;
-  console.log(req.body);
   try {
     const profileImg = await uploadToCloudinary(req.file.path, "chat-user");
     const updatedUser = await User.findOneAndUpdate(
@@ -122,19 +126,24 @@ const changeUserProfile = async (req, res) => {
       fullName: updatedUser.fullName,
       profile: updatedUser.profile.img,
     };
-    res.status(200).json(user);
+    res
+      .status(200)
+      .json({ data: user, message: "Profile updated successfully" });
   } catch (error) {
     console.log(error);
+    res.json({ error: error });
   }
 };
 
 const getChats = async (req, res) => {
   const { id } = req.params;
 
-  const chats = await User.find({ _id: { $ne: id } }).populate({
-    path: "chats",
-    // match: { room: checkedRoom },
-  });
+  const chats = await User.find({ _id: { $ne: id } })
+    .populate({
+      path: "chats",
+      // match: { room: checkedRoom },
+    })
+    .sort({ updatedAt: -1 });
 
   for (const chat of chats) {
     // console.log(chat.chats);

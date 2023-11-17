@@ -4,7 +4,7 @@ import axios from "axios";
 const initialState = {
   status: "idle",
   error: null,
-  chats: null,
+  chats: [],
 };
 export const fetchChats = createAsyncThunk(
   "chats/fetchChats",

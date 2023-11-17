@@ -7,65 +7,60 @@ const initialState = {
     (Cookies.get("user") !== undefined && JSON.parse(Cookies.get("user"))) ||
     null,
   status: "idle",
+  message: "",
   error: null,
 };
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const res = await axios.post("http://localhost:4000/api/signup", data);
       return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
       }
-
-      return rejectWithValue(err.response.data);
     }
   }
 );
 
 export const updateUserName = createAsyncThunk(
   "userName/updateUserName",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const res = await axios.put(
         "http://localhost:4000/api/update/user-name",
         data
       );
       return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
       }
-
-      return rejectWithValue(err.response.data);
     }
   }
 );
 export const changeUserPassword = createAsyncThunk(
   "changePassword/changeUserPassword",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const res = await axios.put(
         "http://localhost:4000/api/change/user-password",
         data
       );
       return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
       }
-
-      return rejectWithValue(err.response.data);
     }
   }
 );
 
 export const changeUserProfile = createAsyncThunk(
   "user/changeUserProfile",
-  async (data, { rejectWithValue }) => {
+  async (data) => {
     try {
       const res = await axios.put(
         "http://localhost:4000/api/change/user-profile",
@@ -73,43 +68,46 @@ export const changeUserProfile = createAsyncThunk(
       );
       return res.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      if (!error.response) {
+        throw error;
+      }
     }
   }
 );
 
-export const loginUser = createAsyncThunk(
-  "user/loginUser",
-  async (data, { rejectWithValue }) => {
-    try {
-      const res = await axios.post("http://localhost:4000/api/signin", data);
-      return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
-      }
-      console.log(err.response.data);
-      return rejectWithValue(err.response.data);
+export const loginUser = createAsyncThunk("user/loginUser", async (data) => {
+  try {
+    const res = await axios.post("http://localhost:4000/api/signin", data);
+    return res.data;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
     }
   }
-);
+});
 
 const userSlice = createSlice({
   name: "user",
   initialState,
+  reducers: {
+    setUserStatus: (state, action) => {
+      state.status = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload));
-      state.user = action.payload;
+      Cookies.set("user", JSON.stringify(action.payload.data));
+      state.user = action.payload.data;
+      state.message = action.payload.message;
       console.log(action.payload);
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
       console.log(action);
     });
     // Login
@@ -118,13 +116,13 @@ const userSlice = createSlice({
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload));
-      state.user = action.payload;
+      Cookies.set("user", JSON.stringify(action.payload.data));
+      state.user = action.payload.data;
+      state.message = action.payload.message;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.payload;
-      console.log(action.payload);
+      state.error = action.payload.error;
     });
     // Update User name
     builder.addCase(updateUserName.pending, (state) => {
@@ -132,12 +130,13 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUserName.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload));
-      state.user = action.payload;
+      Cookies.set("user", JSON.stringify(action.payload.data));
+      state.user = action.payload.data;
+      state.message = action.payload.message;
     });
     builder.addCase(updateUserName.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
+      state.error = action.payload.error;
     });
     // Change Password
     builder.addCase(changeUserPassword.pending, (state) => {
@@ -145,12 +144,12 @@ const userSlice = createSlice({
     });
     builder.addCase(changeUserPassword.fulfilled, (state, action) => {
       state.status = "succeeded";
-      console.log(action.payload);
+      state.message = action.payload.message;
+      // console.log(action.payload);
     });
     builder.addCase(changeUserPassword.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
-      console.log(action.error.message);
+      state.error = action.payload.error;
     });
     // Change Profile
     builder.addCase(changeUserProfile.pending, (state) => {
@@ -158,13 +157,13 @@ const userSlice = createSlice({
     });
     builder.addCase(changeUserProfile.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload));
-      state.user = action.payload;
+      Cookies.set("user", JSON.stringify(action.payload.data));
+      state.user = action.payload.data;
+      state.message = action.payload.message;
     });
     builder.addCase(changeUserProfile.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.error.message;
-      console.log(action.error.message);
+      state.error = action.payload.error;
     });
   },
 });
@@ -173,8 +172,10 @@ export const selectUser = (state) => state.user.user;
 
 export const getUserStatus = (state) => state.user.status;
 
+export const getUserMessage = (state) => state.user.message;
+
 export const getUserError = (state) => state.user.error;
 
-export const {} = userSlice.actions;
+export const { setUserStatus } = userSlice.actions;
 
 export default userSlice.reducer;

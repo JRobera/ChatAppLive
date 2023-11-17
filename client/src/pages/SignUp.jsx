@@ -1,21 +1,27 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserError,
+  getUserMessage,
   getUserStatus,
   registerUser,
   selectUser,
+  setUserStatus,
 } from "../features/user/userSlice";
 
 export default function SignUp() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const userStatus = useSelector(getUserStatus);
+  const userMessage = useSelector(getUserMessage);
   const userError = useSelector(getUserError);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -25,6 +31,16 @@ export default function SignUp() {
       navigate("/home");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (userStatus === "succeeded") {
+      toast.success(userMessage);
+      dispatch(setUserStatus("idle"));
+    } else if (userStatus === "failed") {
+      toast.error(userError);
+      dispatch(setUserStatus("idle"));
+    }
+  }, [userStatus]);
 
   const schema = yup.object().shape({
     firstName: yup
