@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SearchBar from "../SearchBar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchChats, selectAllChats } from "../../features/chats/chatsSlice";
+import { selectAllChats } from "../../features/chats/chatsSlice";
 import SearchItem from "./SearchItem";
 import { selectUser } from "../../features/user/userSlice";
 

@@ -12,11 +12,14 @@ export const fetchChats = createAsyncThunk(
     try {
       const res = await api.get(`/api/chats/${id}`);
       return res.data;
-    } catch (err) {
-      if (!err.response) {
-        throw err;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
       }
-      return rejectWithValue(err.response.data);
     }
   }
 );

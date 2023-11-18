@@ -54,7 +54,7 @@ export default function NotificationItem({
         <audio src={message} controls className="w-full pb-1"></audio>
       )}
       <span className="absolute right-1 text-xs -bottom-3 text-[#afafb3]">
-        {formatDistanceToNow(parseISO(date)) + " age"}
+        {formatDistanceToNow(parseISO(date)) + " ago"}
       </span>
       {markasReaden ? (
         <button
@@ -74,7 +74,7 @@ export default function NotificationItem({
             handleMarkAsReaden(id);
           }}
         >
-          Mark as readen
+          Mark as read
         </button>
       )}
     </div>

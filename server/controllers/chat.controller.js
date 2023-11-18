@@ -14,9 +14,9 @@ const getMessageForRoom = async (req, res) => {
     const foundRoomChat = await Chat.findOne({ room: foundRoom.room }).populate(
       { path: "chats.senderId", select: "_id fullName" }
     );
-    res.status(200).json(foundRoomChat);
+    res.status(200).json({ data: foundRoomChat });
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 
@@ -46,7 +46,7 @@ const addMessageToRoom = async (req, res) => {
         { new: true }
       );
       // console.log(foundRoomChat);
-      res.status(200).json(foundRoomChat.chats);
+      res.status(200).json({ data: foundRoomChat.chats });
     } else {
       const foundRoomChat = await Chat.findOneAndUpdate(
         { room: foundRoom.room },
@@ -58,10 +58,10 @@ const addMessageToRoom = async (req, res) => {
         { new: true }
       );
       // console.log(foundRoomChat);
-      res.status(200).json(foundRoomChat.chats);
+      res.status(200).json({ data: foundRoomChat.chats });
     }
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 
@@ -81,7 +81,7 @@ const deleteMessage = async (req, res) => {
     // console.log(newchat);
     res.status(200).json();
   } catch (error) {
-    console.log(error);
+    res.json({ error: error });
   }
 };
 
@@ -93,7 +93,7 @@ const uploadImage = async (req, res) => {
     );
     res.status(200).json({ data: uploadedImage });
   } catch (error) {
-    res.json("Something went wrong!");
+    res.json({ error: error });
   }
 };
 const uploadAudio = async (req, res) => {
@@ -104,7 +104,7 @@ const uploadAudio = async (req, res) => {
     );
     res.status(200).json({ data: uploadedAudio });
   } catch (error) {
-    res.json("Something went wrong!");
+    res.json({ error: error });
   }
 };
 

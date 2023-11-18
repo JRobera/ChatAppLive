@@ -10,61 +10,92 @@ const initialState = {
 
 export const createGroup = createAsyncThunk(
   "group/createGroup",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.post("/api/create-group", data);
       return res.data;
-    } catch (err) {
-      throw err;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
 );
 
 export const updateGroupProfile = createAsyncThunk(
   "group/updateGroupProfile",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/update-group/profile", data);
       return res.data;
     } catch (error) {
-      throw error;
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
 );
 
 export const addMemberToGroup = createAsyncThunk(
   "group/addMemberToGroup",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/add-group/member", data);
       return res.data;
     } catch (error) {
-      throw error;
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
 );
 export const removeMemberFromGroup = createAsyncThunk(
   "group/removeMemberFromGroup",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/delete-group/member", data);
       return res.data;
     } catch (error) {
-      throw error;
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
 );
 
-export const fetchGroup = createAsyncThunk("group/fetchGroup", async (data) => {
-  try {
-    const res = await api(`/api/get-groups/${data}`);
-    return res.data;
-  } catch (err) {
-    if (!err.response) {
-      throw err;
+export const fetchGroup = createAsyncThunk(
+  "group/fetchGroup",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api(`/api/get-groups/${data}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
-});
+);
 
 export const groupSlice = createSlice({
   name: "group",

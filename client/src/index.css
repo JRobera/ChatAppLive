@@ -9,7 +9,7 @@ body,
 }
 
 ::-webkit-scrollbar {
-  @apply bg-[#edeefc] w-2;
+  @apply bg-[#edeefc] w-1 h-1;
 }
 
 ::-webkit-scrollbar-track {

@@ -13,12 +13,16 @@ const initialState = {
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.post("/api/signup", data);
       return res.data;
     } catch (error) {
-      if (!error.response) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
         throw error;
       }
     }
@@ -27,12 +31,16 @@ export const registerUser = createAsyncThunk(
 
 export const updateUserName = createAsyncThunk(
   "userName/updateUserName",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/update/user-name", data);
       return res.data;
     } catch (error) {
-      if (!error.response) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
         throw error;
       }
     }
@@ -40,12 +48,16 @@ export const updateUserName = createAsyncThunk(
 );
 export const changeUserPassword = createAsyncThunk(
   "changePassword/changeUserPassword",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/change/user-password", data);
       return res.data;
     } catch (error) {
-      if (!error.response) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
         throw error;
       }
     }
@@ -54,28 +66,39 @@ export const changeUserPassword = createAsyncThunk(
 
 export const changeUserProfile = createAsyncThunk(
   "user/changeUserProfile",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
       const res = await api.put("/api/change/user-profile", data);
       return res.data;
     } catch (error) {
-      if (!error.response) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
         throw error;
       }
     }
   }
 );
 
-export const loginUser = createAsyncThunk("user/loginUser", async (data) => {
-  try {
-    const res = await api.post("/api/signin", data);
-    return res.data;
-  } catch (error) {
-    if (!error.response) {
-      throw error;
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/api/signin", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
     }
   }
-});
+);
 
 const userSlice = createSlice({
   name: "user",

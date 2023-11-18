@@ -43,7 +43,7 @@ export default function CurrentChatInfo({ currentChat }) {
   // }, []);
 
   return (
-    <div className="border-b-2 flex justify-between items-center pr-2 min-h-[54px] relative">
+    <div className="border-y-2 sm:border-b-2 sm:border-t-0 flex justify-between items-center pr-2 min-h-[54px] relative">
       {currentChat && (
         <div className="flex gap-2 p-2 items-center">
           <Avatar style="chatProfile" src={currentChat?.profile} />

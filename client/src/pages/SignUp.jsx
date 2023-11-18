@@ -142,13 +142,13 @@ export default function SignUp() {
       <button className="bg-white mt-2 rounded-sm p-1">
         SignUp{" "}
         {userStatus === "loading" && (
-          <span className="w-3 h-3 inline-block rounded-full border-slate-400 border-2 border-x-transparent animate-spin"></span>
+          <span className="w-3 h-3 ml-1 inline-block rounded-full border-slate-400 border-2 border-x-transparent animate-spin"></span>
         )}
       </button>
       <p className="text-sm">
-        Already have an accounte?{" "}
+        Already have an account?{" "}
         <Link to="/signin" className="text-blue-600">
-          Signin
+          SignIn
         </Link>
       </p>
     </form>

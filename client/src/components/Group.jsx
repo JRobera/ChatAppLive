@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Chat from "./Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -15,7 +15,7 @@ export default function Group() {
   };
 
   return (
-    <div className="flex items-center flex-col overflow-x-auto min-h-[420px] max-h-[420px]">
+    <div className="flex items-center sm:flex-col overflow-x-auto sm:min-h-[420px] sm:max-h-[420px]">
       {filterdChats?.map((group) => (
         <Chat
           key={group?._id}

@@ -10,51 +10,111 @@ const initialState = {
 
 export const fetchMessages = createAsyncThunk(
   "messages/fetchMessages",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     const query = new URLSearchParams(data).toString();
-    const res = await api.get(`/api/messages?${query}`);
-    return res.data;
+    try {
+      const res = await api.get(`/api/messages?${query}`);
+      return res.data.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const postMessage = createAsyncThunk(
   "message/postMessage",
-  async (data) => {
-    const res = await api.post("/api/add/message", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/api/add/message", data);
+      return res.data.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const deleteMessageAsync = createAsyncThunk(
   "messages/deleteMessage",
-  async (data) => {
-    const res = await api.put("/api/delete/message", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.put("/api/delete/message", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const fetchGroupChat = createAsyncThunk(
   "groupchat/fetchGroupChat",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     const query = new URLSearchParams(data).toString();
-    const res = await api(`/api/get-group/chat?${query}`);
-    return res.data;
+    try {
+      const res = await api(`/api/get-group/chat?${query}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const postGroupMessage = createAsyncThunk(
   "groupmessage/postGroupMessage",
-  async (data) => {
-    const res = await api.post("/api/add-group/message", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/api/add-group/message", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const deleteGroupMessageAsync = createAsyncThunk(
   "messages/deleteMessage",
-  async (data) => {
-    const res = await api.put("/api/delete/group/message", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.put("/api/delete/group/message", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
@@ -94,6 +154,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(postMessage.fulfilled, (state, action) => {
       state.status = "succeeded";
+      console.log(state.payload);
       state.messages.chats = state.messages.chats?.map((chat, idx) => ({
         ...chat,
         _id: action.payload[idx]?._id,

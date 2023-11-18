@@ -35,22 +35,28 @@ const signUpUser = async (req, res) => {
 };
 const signInUser = async (req, res) => {
   const { email, password } = req.body;
-  const foundUser = await User.findOne({ email: email });
-  if (foundUser) {
-    bcrypt.compare(password, foundUser.password, (err, result) => {
-      if (result) {
-        const user = {
-          _id: foundUser._id,
-          fullName: foundUser.fullName,
-          profile: foundUser.profile.img,
-        };
-        res.status(202).json({ data: user, message: "Successfully Logged in" });
-      } else {
-        res.status(403).json({ error: "Incorrect password!" });
-      }
-    });
-  } else {
-    res.status(404).json("User does not exist!");
+  try {
+    const foundUser = await User.findOne({ email: email });
+    if (foundUser) {
+      bcrypt.compare(password, foundUser.password, (err, result) => {
+        if (result) {
+          const user = {
+            _id: foundUser._id,
+            fullName: foundUser.fullName,
+            profile: foundUser.profile.img,
+          };
+          res
+            .status(202)
+            .json({ data: user, message: "Successfully Logged in" });
+        } else {
+          res.status(403).json({ error: "Incorrect password!" });
+        }
+      });
+    } else {
+      res.status(404).json({ error: "User does not exist!" });
+    }
+  } catch (error) {
+    res.json({ error: "Something went wrong!" });
   }
 };
 

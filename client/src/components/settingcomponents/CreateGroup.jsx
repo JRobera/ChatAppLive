@@ -1,39 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
-import Avatar from "../Avatar";
-import toast from "react-hot-toast";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../features/user/userSlice";
-import axios from "axios";
-import {
-  createGroup,
-  getGroupStatus,
-  getGroupError,
-  setGroupStatus,
-  getGroupMessage,
-} from "../../features/group/groupSlice";
+
+import { createGroup } from "../../features/group/groupSlice";
 
 export default function CreateGroup() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const groupStatus = useSelector(getGroupStatus);
-  const groupMessage = useSelector(getGroupMessage);
-  const groupError = useSelector(getGroupError);
+  // const groupStatus = useSelector(getGroupStatus);
+  // const groupMessage = useSelector(getGroupMessage);
+  // const groupError = useSelector(getGroupError);
   const [groupProfile, setGroupProfile] = useState(null);
 
-  useEffect(() => {
-    if (groupStatus === "suceeded") {
-      toast.success(groupMessage);
-      dispatch(setGroupStatus("idle"));
-    } else if (groupStatus === "failed") {
-      toast.error(groupError);
-      dispatch(setGroupStatus("idle"));
-    }
-  }, [groupStatus]);
+  // useEffect(() => {
+  //   if (groupStatus === "suceeded") {
+  //     toast.success(groupMessage);
+  //     dispatch(setGroupStatus("idle"));
+  //   } else if (groupStatus === "failed") {
+  //     toast.error(groupError);
+  //     dispatch(setGroupStatus("idle"));
+  //   }
+  // }, [groupStatus]);
 
   const schema = yup.object().shape({
     groupName: yup

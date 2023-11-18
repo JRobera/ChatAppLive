@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeUserPassword,
-  getUserError,
-  getUserStatus,
-  selectUser,
-  setUserStatus,
-} from "../../features/user/userSlice";
+import { changeUserPassword, selectUser } from "../../features/user/userSlice";
 import toast from "react-hot-toast";
 
 export default function ChangePassword() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const userStatus = useSelector(getUserStatus);
-  const userError = useSelector(getUserError);
   const [showPassword, setShowPassword] = useState(false);
 
   const schema = yup.object().shape({

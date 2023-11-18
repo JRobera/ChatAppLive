@@ -41,12 +41,11 @@ export default function Setting({ handleShowSetting }) {
     const formData = new FormData();
     formData.append("user-profile", e.target.files[0]);
     formData.append("id", user?._id);
-    console.log(e.target.files);
     dispatch(changeUserProfile(formData));
   };
 
   return (
-    <div className="flex flex-col gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 p-2 rounded-sm bg-[#edeefc] border-2 shadow-sm z-10">
+    <div className="flex flex-col gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 sm:w-1/2 p-2 rounded-sm bg-[#edeefc] border-2 shadow-sm z-20">
       <div className="flex border-b-2">
         <h2 className="flex-1 font-bold">Setting</h2>
         <p onClick={handleShowSetting}>

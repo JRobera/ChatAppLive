@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
     const found = await checkRoom(user, currentChat);
     socket.join(found.room);
     currentRoom = found.room;
-    console.log(connectedUsers);
+    // console.log(connectedUsers);
   });
   socket.on("send-message", (data) => {
     io.to(currentRoom).emit("receive-message", data);
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
   socket.on("join-group", (data) => {
     socket.join(data);
     currentRoom = data;
-    console.log(connectedUsers);
+    // console.log(connectedUsers);
   });
   socket.on("send-group-message", (data) => {
     io.to(currentRoom).emit("receive-group-message", data);

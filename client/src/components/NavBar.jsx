@@ -63,6 +63,7 @@ export default function NavBar({ profile, socket }) {
               Cookies.remove("user");
               navigate("/");
             }}
+            aria-label="Logout button"
           >
             <BiLogOut size={20} />
           </button>

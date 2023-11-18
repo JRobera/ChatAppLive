@@ -50,15 +50,16 @@ export default function SignIn() {
 
   const submit = (data) => {
     dispatch(loginUser(data));
-    reset();
   };
   useEffect(() => {
     if (userStatus === "succeeded") {
       toast.success(userMessage);
       dispatch(setUserStatus("idle"));
+      reset();
     } else if (userStatus === "failed") {
       toast.error(userError);
       dispatch(setUserStatus("idle"));
+      reset();
     }
   }, [userStatus]);
 
@@ -105,11 +106,11 @@ export default function SignIn() {
       <button className="bg-white mt-2 rounded-sm p-1">
         SignIn
         {userStatus === "loading" && (
-          <span className="w-3 h-3 inline-block rounded-full border-slate-400 border-2 border-x-transparent animate-spin"></span>
+          <span className="w-3 h-3 ml-1 inline-block rounded-full border-slate-400 border-2 border-x-transparent animate-spin"></span>
         )}
       </button>
       <p className="text-sm">
-        Don't have accounte?{" "}
+        Don't have account?{" "}
         <Link to="/" className="text-blue-600">
           Signup
         </Link>

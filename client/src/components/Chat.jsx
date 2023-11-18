@@ -21,12 +21,12 @@ export default function Chat({
 
   return (
     <div
-      className=" bg-[#ffffff] cursor-pointer w-full flex gap-2 items-center p-2 hover:bg-[#edeefc]"
+      className=" bg-[#ffffff] cursor-pointer min-w-fit sm:w-full flex flex-col sm:flex-row gap-2 items-center p-2 hover:bg-[#edeefc]"
       onClick={() => selectCurrentChat(user, chatType)}
     >
       <Avatar style="chatProfile" src={profile} />
-      <div className="flex-1">
-        <div className="flex justify-between">
+      <div className="sm:flex-1">
+        <div className="flex justify-between flex-col sm:flex-row">
           <p className="font-semibold text-sm">{name}</p>
           <span className="text-md text-xs text-slate-500">
             {time ? formatDistanceToNow(parseISO(time)) + " ago" : ""}

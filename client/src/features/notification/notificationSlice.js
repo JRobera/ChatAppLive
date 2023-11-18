@@ -10,32 +10,71 @@ const initialState = {
 export const fetchNotification = createAsyncThunk(
   "notification/fetchNotification",
   async (data) => {
-    const res = await api.get(`/api/get/notification/${data}`);
-
-    return res.data;
+    try {
+      const res = await api.get(`/api/get/notification/${data}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const addNotification = createAsyncThunk(
   "notification/addNotification",
-  async (data) => {
-    const res = await api.post("/api/add/notification", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/api/add/notification", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
 export const markAsReadenAsync = createAsyncThunk(
   "notification/markAsReadenAsync",
-  async (data) => {
-    const res = await api.put("/api/mark-as-readen", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.put("/api/mark-as-readen", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 export const deleteNotificationAsync = createAsyncThunk(
   "notification/deleteNotificationAsync",
-  async (data) => {
-    const res = await api.put("/api/delete/notification", data);
-    return res.data;
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.put("/api/delete/notification", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
   }
 );
 
