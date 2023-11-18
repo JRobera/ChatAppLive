@@ -77,7 +77,7 @@ export default function RootLayout() {
       <SideBar />
       <div className=" flex-1">
         <NavBar profile={user?.profile} socket={socket} />
-        <div className="chatWindow flex flex-col sm:flex-row m-2 mt-0 border-2 min-h-[480px] max-h-[485px] overflow-x-auto rounded-md">
+        <div className="chatWindow flex flex-col sm:flex-row m-2 mt-0 border-2 min-h-[480px] sm:max-h-[485px] overflow-x-auto rounded-md">
           {chatStatus === "loading" || groupStatus === "loading" ? (
             <div className="border-r-2 flex-1 pt-2 flex flex-col">
               Loading...
