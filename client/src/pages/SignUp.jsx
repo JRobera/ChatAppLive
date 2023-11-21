@@ -33,10 +33,10 @@ export default function SignUp() {
   }, [user]);
 
   useEffect(() => {
-    if (userStatus === "succeeded") {
+    if (userStatus === "succeeded" && userMessage) {
       toast.success(userMessage);
       dispatch(setUserStatus("idle"));
-    } else if (userStatus === "failed") {
+    } else if (userStatus === "failed" && userError) {
       toast.error(userError);
       dispatch(setUserStatus("idle"));
     }
@@ -69,9 +69,6 @@ export default function SignUp() {
   const submit = (data) => {
     dispatch(registerUser(data));
   };
-  if (userError) {
-    console.log("user already exits!");
-  }
 
   return (
     <form

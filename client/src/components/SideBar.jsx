@@ -14,7 +14,9 @@ export default function SideBar() {
 
   return (
     <div className=" border-x-2 sm:h-full w-full pb-2 flex sm:w-16 sm:flex-col items-center gap-3 sm:pt-5">
-      <span className=" font-bold sm:w-full text-center">Chat</span>
+      <span className=" font-bold hidden sm:inline-block sm:w-full text-center">
+        Chat
+      </span>
       <nav className="side-bar flex gap-6 sm:flex-col items-center justify-center w-full">
         <NavLink to="." end title="All">
           <BsBorderAll size={20} />

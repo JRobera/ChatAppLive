@@ -52,11 +52,11 @@ export default function SignIn() {
     dispatch(loginUser(data));
   };
   useEffect(() => {
-    if (userStatus === "succeeded") {
+    if (userStatus === "succeeded" && userMessage) {
       toast.success(userMessage);
       dispatch(setUserStatus("idle"));
       reset();
-    } else if (userStatus === "failed") {
+    } else if (userStatus === "failed" && userError) {
       toast.error(userError);
       dispatch(setUserStatus("idle"));
       reset();

@@ -3,9 +3,8 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
 import Avatar from "./Avatar";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../features/user/userSlice";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { logOut, selectUser } from "../features/user/userSlice";
+import { Link, NavLink } from "react-router-dom";
 import {
   addNewNotification,
   selectAllNotifications,
@@ -16,7 +15,6 @@ export default function NavBar({ profile, socket }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const notification = useSelector(selectAllNotifications);
-  const navigate = useNavigate();
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -38,7 +36,7 @@ export default function NavBar({ profile, socket }) {
   };
 
   return (
-    <header className="flex  p-2">
+    <header className="flex p-2">
       {user !== null ? (
         <nav className=" flex flex-1 gap-2 items-center justify-end">
           <div
@@ -60,8 +58,8 @@ export default function NavBar({ profile, socket }) {
           </div>
           <button
             onClick={() => {
-              Cookies.remove("user");
-              navigate("/");
+              document.location.href = "/signin";
+              dispatch(logOut());
             }}
             aria-label="Logout button"
           >

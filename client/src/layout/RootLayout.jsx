@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import api from "../features/axios";
+import api from "../axios";
 import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
 import SearchBar from "../components/SearchBar";
 import Messages from "../components/Messages";
 import InputComponent from "../components/InputComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../features/user/userSlice";
+import {
+  getUserStatus,
+  refreshToken,
+  selectUser,
+} from "../features/user/userSlice";
 import { io } from "socket.io-client";
 import { restMessage } from "../features/messages/messageSlice";
 import { fetchNotification } from "../features/notification/notificationSlice";
@@ -23,12 +27,14 @@ import {
   getChatStatus,
   selectAllChats,
 } from "../features/chats/chatsSlice";
+import UserSkeleton from "../skeleton/userSkeleton";
 
 const socket = io(api.defaults.baseURL);
 
 export default function RootLayout() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const userStatus = useSelector(getUserStatus);
   const chats = useSelector(selectAllChats);
   const chatStatus = useSelector(getChatStatus);
   const groups = useSelector(selectAllGroup);
@@ -53,10 +59,11 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
-    if (user === null) {
-      console.log(user);
-      return navigate("/");
-    }
+    // if (user === null) {
+    //   return navigate("/");
+    // } else {
+    //   dispatch(refreshToken());
+    // }
     socket.emit("user-data", user?._id);
     dispatch(fetchNotification(user?._id));
     dispatch(fetchChats(user?._id));
@@ -73,24 +80,27 @@ export default function RootLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="flex h-full flex-col-reverse sm:flex-row">
+    <div className="flex h-full flex-col-reverse sm:flex-row overflow-auto">
       <SideBar />
       <div className=" flex-1">
         <NavBar profile={user?.profile} socket={socket} />
         <div className="chatWindow flex flex-col sm:flex-row m-2 mt-0 border-2 min-h-[480px] sm:max-h-[485px] overflow-x-auto rounded-md">
-          {chatStatus === "loading" || groupStatus === "loading" ? (
-            <div className="border-r-2 flex-1 pt-2 flex flex-col">
-              Loading...
-            </div>
-          ) : (
-            <div className="border-r-2 flex-1 pt-2 flex flex-col">
-              <SearchBar
-                list={selectList()}
-                handleFilteredUsers={handleFilteredUsers}
-              />
+          <div className="border-r-2 flex-1 pt-2 flex flex-col">
+            <SearchBar
+              list={selectList()}
+              handleFilteredUsers={handleFilteredUsers}
+            />
+            {chatStatus === "loading" || groupStatus === "loading" ? (
+              <div className="flex gap-1 items-center sm:flex-col overflow-x-auto sm:min-h-[420px] sm:max-h-[420px]">
+                {[...Array(7).keys()].map((i) => (
+                  <UserSkeleton key={i} />
+                ))}
+              </div>
+            ) : (
               <Outlet context={[filterdChats, setCurrentChat, socket]} />
-            </div>
-          )}
+            )}
+          </div>
+
           <div className="flex-[2]">
             {/* Current Chat Info Bar */}
             <CurrentChatInfo currentChat={currentChat} />

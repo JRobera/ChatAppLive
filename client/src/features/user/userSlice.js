@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import api from "../axios";
+import { jwtDecode } from "jwt-decode";
+import api from "../../axios";
 
 const initialState = {
-  user:
-    (Cookies.get("user") !== undefined && JSON.parse(Cookies.get("user"))) ||
-    null,
+  user: null,
   status: "idle",
   message: "",
+  accessToken: null,
   error: null,
 };
 
@@ -15,7 +15,9 @@ export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await api.post("/api/signup", data);
+      const res = await api.post("/api/signup", data, {
+        withCredentials: true,
+      });
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -86,7 +88,9 @@ export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await api.post("/api/signin", data);
+      const res = await api.post("/api/signin", data, {
+        withCredentials: true,
+      });
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -99,6 +103,35 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const refreshToken = createAsyncThunk(
+  "user/refreshToken",
+  async (tem = 0, { rejectWithValue }) => {
+    try {
+      const res = await api.post(
+        "/api/refresh-token",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle specific error response from the server
+        return rejectWithValue(error.response.data);
+      } else {
+        // Handle generic or network error
+        throw error;
+      }
+    }
+  }
+);
+
+export const logOut = createAsyncThunk("user/logOut", async () => {
+  const res = api.post("/api/logout", {}, { withCredentials: true });
+  return res.data;
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -114,10 +147,11 @@ const userSlice = createSlice({
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload.data));
-      state.user = action.payload.data;
+
+      state.user = jwtDecode(action.payload.data);
+      state.accessToken = action.payload.data;
       state.message = action.payload.message;
-      // console.log(action.payload);
+      console.log(jwtDecode(action.payload.data));
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.status = "failed";
@@ -130,13 +164,32 @@ const userSlice = createSlice({
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload.data));
-      state.user = action.payload.data;
+      // console.log(jwtDecode(action.payload.data));
+      state.user = jwtDecode(action.payload.data);
+      state.accessToken = action.payload.data;
       state.message = action.payload.message;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload.error;
+    });
+    // refresh
+    builder.addCase(refreshToken.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user = jwtDecode(action.payload.data);
+      state.accessToken = action.payload.data;
+    });
+    builder.addCase(refreshToken.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload?.error;
+    });
+    //logout
+    builder.addCase(logOut.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      console.log(action.payload);
     });
     // Update User name
     builder.addCase(updateUserName.pending, (state) => {
@@ -144,7 +197,7 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUserName.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload.data));
+
       state.user = action.payload.data;
       state.message = action.payload.message;
     });
@@ -171,13 +224,12 @@ const userSlice = createSlice({
     });
     builder.addCase(changeUserProfile.fulfilled, (state, action) => {
       state.status = "succeeded";
-      Cookies.set("user", JSON.stringify(action.payload.data));
       state.user = action.payload.data;
       state.message = action.payload.message;
     });
     builder.addCase(changeUserProfile.rejected, (state, action) => {
       state.status = "failed";
-      state.error = action.payload.error;
+      state.error = action.payload?.error;
     });
   },
 });
@@ -187,6 +239,8 @@ export const selectUser = (state) => state.user.user;
 export const getUserStatus = (state) => state.user.status;
 
 export const getUserMessage = (state) => state.user.message;
+
+export const getUserAccessToken = (state) => state.user.accessToken;
 
 export const getUserError = (state) => state.user.error;
 

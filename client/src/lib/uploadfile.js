@@ -1,4 +1,4 @@
-import api from "../features/axios";
+import api from "../axios";
 
 const uploadChatImage = async (data) => {
   const res = await api.post("/api/upload/chat-image", data);

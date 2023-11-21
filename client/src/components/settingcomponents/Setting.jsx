@@ -28,10 +28,10 @@ export default function Setting({ handleShowSetting }) {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
 
   useEffect(() => {
-    if (userStatus === "succeeded") {
+    if (userStatus === "succeeded" && userMessage) {
       toast.success(userMessage);
       dispatch(setUserStatus("idle"));
-    } else if (userStatus === "failed") {
+    } else if (userStatus === "failed" && userError) {
       toast.error(userError);
       dispatch(setUserStatus("idle"));
     }

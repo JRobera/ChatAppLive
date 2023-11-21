@@ -1,0 +1,19 @@
+.skeleton {
+  @apply bg-gray-100;
+}
+.skeleton-img,
+.skeleton-name,
+.skeleton-message {
+  @apply bg-gray-200;
+  animation: pulse linear 2s infinite;
+}
+.skeleton-name,
+.skeleton-message {
+  @apply h-4;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}

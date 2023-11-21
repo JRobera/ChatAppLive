@@ -11,7 +11,6 @@ export default function Home() {
 
   useEffect(() => {
     if (user !== null) {
-      console.log(user);
       navigate("/home");
     }
   }, []);

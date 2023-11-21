@@ -29,10 +29,10 @@ export default function CurrentChatInfo({ currentChat }) {
   const groupError = useSelector(getGroupError);
 
   useEffect(() => {
-    if (groupStatus === "suceeded") {
+    if (groupStatus === "suceeded" && groupMessage) {
       toast.success(groupMessage);
       dispatch(setGroupStatus("idle"));
-    } else if (groupStatus === "failed") {
+    } else if (groupStatus === "failed" && groupError) {
       toast.error(groupError);
       dispatch(setGroupStatus("idle"));
     }

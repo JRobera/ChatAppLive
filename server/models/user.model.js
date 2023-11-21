@@ -17,6 +17,7 @@ const UserSchema = new Schema(
     },
     chats: [{ type: Schema.Types.ObjectId, ref: "Chat" }],
     // groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+    refreshToken: { type: String },
   },
   { timestamps: true }
 );

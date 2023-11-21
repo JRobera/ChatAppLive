@@ -44,9 +44,7 @@ const getGroups = async (req, res) => {
     const groups = await Group.find({
       $or: [{ public_group: true }, { members: { $in: [_id] } }],
     }).sort({ updatedAt: -1 });
-    res
-      .status(200)
-      .json({ data: groups, message: "Groups Fetched Successfully" });
+    res.status(200).json({ data: groups });
   } catch (error) {
     res.json({ error: error });
   }

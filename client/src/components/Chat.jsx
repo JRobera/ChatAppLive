@@ -21,7 +21,7 @@ export default function Chat({
 
   return (
     <div
-      className=" bg-[#ffffff] cursor-pointer min-w-fit sm:w-full flex flex-col sm:flex-row gap-2 items-center p-2 hover:bg-[#edeefc]"
+      className=" bg-[#ffffff] cursor-pointer flex-shrink-0 w-28 sm:w-full flex flex-col sm:flex-row gap-2 items-center p-2 hover:bg-[#edeefc]"
       onClick={() => selectCurrentChat(user, chatType)}
     >
       <Avatar style="chatProfile" src={profile} />

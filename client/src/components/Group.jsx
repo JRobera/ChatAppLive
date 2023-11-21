@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Chat from "./Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";

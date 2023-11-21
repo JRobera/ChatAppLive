@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../axios";
+import api from "../../axios";
 
 const initialState = {
   status: "idle",
@@ -112,7 +112,6 @@ export const groupSlice = createSlice({
       builder.addCase(fetchGroup.fulfilled, (state, action) => {
         state.status = "suceeded";
         state.group = action.payload.data;
-        state.message = action.payload.message;
         // console.log(action.payload);
       });
     builder.addCase(fetchGroup.rejected, (state, action) => {
