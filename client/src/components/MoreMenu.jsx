@@ -17,7 +17,7 @@ export default function MoreMenu({
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.messages.messages);
   const location = useLocation();
-  const menu = ["Reply", "Edit", "Delete"];
+  const menu = ["Reply", "Delete"];
 
   const handleEditMessage = () => {
     const filtered = messages.filter((message) => message._id !== _id);

@@ -27,7 +27,7 @@ import {
   getChatStatus,
   selectAllChats,
 } from "../features/chats/chatsSlice";
-import UserSkeleton from "../skeleton/userSkeleton";
+import UserSkeleton from "../skeleton/UserSkeleton.jsx";
 
 const socket = io(api.defaults.baseURL);
 
