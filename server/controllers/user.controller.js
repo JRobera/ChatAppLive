@@ -161,7 +161,7 @@ const refreshToken = async (req, res) => {
       }
     );
   } else {
-    res.status.json({ error: "Invalid Refresh token!" });
+    res.status(403).json({ error: "Invalid Refresh token!" });
   }
 };
 
