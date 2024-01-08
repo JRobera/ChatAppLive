@@ -9,14 +9,14 @@ export default function Notification() {
   // console.log(notifications);
 
   return (
-    <div className="absolute -right-16 sm:right-0 w-60 sm:w-80 p-1 flex flex-col gap-4 max-h-[250px] min-h-[200px] overflow-x-auto z-20 bg-white border-2 rounded-sm">
+    <div className="absolute -right-16 sm:right-0 w-60 sm:w-80 p-1 flex flex-col gap-4 max-h-[250px] min-h-[200px] overflow-x-auto z-20 bg-white border-2 rounded-md">
       {notifications.length > 0 ? (
         notifications?.map((notificatioin, idx) => (
           <NotificationItem
             key={idx}
             id={notificatioin._id}
             markasReaden={notificatioin?.markasReaden}
-            name={notificatioin?.senderId.fullName}
+            name={notificatioin?.senderId?.fullName}
             type={notificatioin?.type}
             message={notificatioin?.message}
             date={notificatioin?.time}

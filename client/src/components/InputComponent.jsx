@@ -35,7 +35,6 @@ export default function InputComponent({
 
   const sendMessage = async () => {
     setIsChatFileLoading(true);
-
     if (file === null) {
       const temp = {
         ...message,
@@ -51,7 +50,7 @@ export default function InputComponent({
         type: "text",
       };
 
-      if (location.pathname === "/home/person") {
+      if (currentChat.admin === undefined) {
         socket.emit("send-message", temp);
         dispatch(postMessage(temp));
         dispatch(addNotification(temp));
@@ -88,7 +87,7 @@ export default function InputComponent({
             type: "image",
           };
 
-          if (location.pathname === "/home/person") {
+          if (currentChat.admin === undefined) {
             socket.emit("send-message", temp);
             dispatch(postMessage(temp));
             dispatch(addNotification(temp));
@@ -123,7 +122,7 @@ export default function InputComponent({
             type: "audio",
           };
 
-          if (location.pathname === "/home/person") {
+          if (currentChat.admin === undefined) {
             socket.emit("send-message", temp);
             dispatch(postMessage(temp));
             dispatch(addNotification(temp));
@@ -174,7 +173,7 @@ export default function InputComponent({
         placeholder="Type a message..."
       ></textarea>
       <label
-        className=" cursor-pointer hover:bg-[#edeefc] rounded-sm"
+        className=" cursor-pointer hover:bg-chat-bg rounded-sm"
         htmlFor="audio"
         title="Select Audio"
       >
@@ -188,7 +187,7 @@ export default function InputComponent({
         />
       </label>
       <label
-        className=" cursor-pointer hover:bg-[#edeefc] rounded-sm"
+        className=" cursor-pointer hover:bg-chat-bg rounded-sm"
         htmlFor="image"
         title="Select Image"
       >
@@ -202,14 +201,18 @@ export default function InputComponent({
         />
       </label>
       <label
-        className=" cursor-pointer hover:bg-[#edeefc] rounded-sm p-1"
+        className=" cursor-pointer hover:bg-chat-bg rounded-sm p-1"
         htmlFor="send-btn"
       >
         <BsSend size={20} color="#3f4080" />
         <input
           type="button"
           disabled={isChatFileLoading}
-          onClick={sendMessage}
+          onClick={() => {
+            if (message.message !== "" || file !== null) {
+              sendMessage();
+            }
+          }}
           id="send-btn"
           hidden
         />

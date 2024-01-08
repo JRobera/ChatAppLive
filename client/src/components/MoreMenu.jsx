@@ -50,7 +50,7 @@ export default function MoreMenu({
     <div className="absolute right-1 top-5 z-10 flex flex-col gap-1 text-xs bg-white p-2 border-[1px] rounded-sm">
       {menu.map((item, idx) => (
         <span
-          className=" cursor-pointer hover:bg-[#edeefc] p-1"
+          className=" cursor-pointer hover:bg-chat-bg p-1"
           key={idx}
           onClick={() => {
             handleSelectedOption(item);

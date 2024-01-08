@@ -26,7 +26,7 @@ export default function Message({
       <div
         className={
           user?._id === senderId
-            ? " m-2 p-2 bg-[#edeefc] rounded-md w-1/2 relative self-end"
+            ? " m-2 p-2 bg-chat-bg rounded-md w-1/2 relative self-end"
             : " m-2 p-2 bg-[#f5f5f5] rounded-md w-1/2 relative"
         }
       >
@@ -60,7 +60,7 @@ export default function Message({
       <div
         className={
           user?._id === senderId
-            ? " m-2 p-2 bg-[#edeefc] rounded-md w-1/2 relative self-end"
+            ? " m-2 p-2 bg-chat-bg rounded-md w-1/2 relative self-end"
             : " m-2 p-2 bg-[#f5f5f5] rounded-md w-1/2 relative"
         }
       >
@@ -98,7 +98,7 @@ export default function Message({
       <div
         className={
           user?._id === senderId
-            ? " m-2 p-2 bg-[#edeefc] rounded-md w-4/5 md:w-3/5 relative self-end"
+            ? " m-2 p-2 bg-chat-bg rounded-md w-4/5 md:w-3/5 relative self-end"
             : " m-2 p-2 bg-[#f5f5f5] rounded-md w-4/5 md:w-3/5 relative"
         }
       >

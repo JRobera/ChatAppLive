@@ -16,7 +16,11 @@ const uploadToCloudinary = async (path, folder) => {
       folder,
     })
     .then((data) => {
-      return { url: data.url, public_id: data.public_id, format: data.format };
+      return {
+        url: data.secure_url,
+        public_id: data.public_id,
+        format: data.format,
+      };
     })
     .catch((error) => {
       console.log(error);
@@ -30,7 +34,11 @@ const uploadAudioToCloudinary = async (path, folder) => {
       folder,
     })
     .then((data) => {
-      return { url: data.url, public_id: data.public_id, format: data.format };
+      return {
+        url: data.secure_url,
+        public_id: data.public_id,
+        format: data.format,
+      };
     })
     .catch((error) => {
       console.log(error);

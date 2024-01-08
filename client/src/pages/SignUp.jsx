@@ -72,7 +72,7 @@ export default function SignUp() {
 
   return (
     <form
-      className=" w-4/5 sm:w-2/5 flex flex-col gap-2 bg-[#edeefc] p-3 pb-5 rounded-sm"
+      className=" w-4/5 sm:w-2/5 flex flex-col gap-2 bg-card-bg p-3 pb-5 rounded-md"
       onSubmit={handleSubmit(submit)}
     >
       <h2 className="text-center font-semibold text-[#3f4080]">SingnUp</h2>

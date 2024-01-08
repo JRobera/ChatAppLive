@@ -39,17 +39,16 @@ export default function NavBar({ profile, socket }) {
     <header className="flex p-2">
       {user !== null ? (
         <nav className=" flex flex-1 gap-2 items-center justify-end">
-          <div
-            className=" relative"
-            onClick={() => setShowNotification((prev) => !prev)}
-          >
-            {unReadnotification()?.length > 0 && (
-              <span className="absolute cursor-pointer -top-1 -right-2 bg-red-500 text-xs text-white flex items-center justify-center rounded-full w-4 h-4">
-                {unReadnotification()?.length}
-              </span>
-            )}
+          <div className=" relative">
+            <div onClick={() => setShowNotification((prev) => !prev)}>
+              {unReadnotification()?.length > 0 && (
+                <span className="absolute cursor-pointer -top-1 -right-2 bg-red-500 text-xs text-white flex items-center justify-center rounded-full w-4 h-4">
+                  {unReadnotification()?.length}
+                </span>
+              )}
 
-            <IoIosNotificationsOutline size={20} />
+              <IoIosNotificationsOutline size={20} />
+            </div>
             {showNotification && <Notification />}
           </div>
           <div className="flex flex-col items-center">

@@ -35,7 +35,7 @@ export default function NotificationItem({
       className={
         markasReaden
           ? "w-full p-2 bg-[#f5f5f5] rounded-sm relative self-end flex flex-col"
-          : " w-full p-2 bg-[#edeefc] rounded-sm relative self-end flex flex-col"
+          : " w-full p-2 bg-chat-bg rounded-sm relative self-end flex flex-col"
       }
     >
       {replyTo && <ReplyHead name={replyTo.name} message={replyTo.message} />}

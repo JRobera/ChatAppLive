@@ -154,7 +154,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(postMessage.fulfilled, (state, action) => {
       state.status = "succeeded";
-      console.log(state.payload);
+      // console.log(state.payload);
       state.messages.chats = state.messages.chats?.map((chat, idx) => ({
         ...chat,
         _id: action.payload[idx]?._id,

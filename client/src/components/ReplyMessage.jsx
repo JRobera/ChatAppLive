@@ -8,7 +8,15 @@ export default function ReplyMessage({ name, message, setreplyMessage }) {
         <p className="text-[10px] font-bold">Reply</p>
         <div>
           <p className="text-[#878ef8] text-xs font-bold">{name}</p>
-          <p className="text-[#3f3f40]">{message.substring(0, 20)}</p>
+          {message?.startsWith("http" || "https") ? (
+            message?.endsWith("mp4") ? (
+              <audio src={message} controls className="w-full h-6"></audio>
+            ) : (
+              <img src={message} className=" w-6 h-6 rounded" />
+            )
+          ) : (
+            <p className="text-[#3f3f40]">{message.substring(0, 20)}</p>
+          )}
         </div>
       </div>
       <span

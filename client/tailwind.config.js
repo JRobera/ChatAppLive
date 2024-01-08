@@ -5,7 +5,16 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}", //add in tailwind.config.js file
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        light: "#ffffff",
+        mbg: { active: "#878ef8" },
+        chat: { bg: "#edeefc" },
+        card: {
+          bg: "#eaebf0",
+        },
+      },
+    },
   },
   plugins: [],
 };

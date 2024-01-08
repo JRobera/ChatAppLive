@@ -53,7 +53,7 @@ export default function CurrentChatInfo({ currentChat }) {
       {currentChat?.admin === user?._id ? (
         <div className="flex gap-2">
           <span
-            className="flex-1 flex justify-end p-1 cursor-pointer hover:bg-[#edeefc] hover:rounded-sm "
+            className="flex-1 flex justify-end p-1 cursor-pointer hover:bg-chat-bg hover:rounded-sm "
             title="Edit group Info"
             onClick={() => {
               setShowEditGroup((prev) => !prev);
@@ -63,7 +63,7 @@ export default function CurrentChatInfo({ currentChat }) {
             <FiEdit size={15} />
           </span>
           <span
-            className="flex-1 flex justify-end p-1 cursor-pointer hover:bg-[#edeefc] hover:rounded-sm "
+            className="flex-1 flex justify-end p-1 cursor-pointer hover:bg-chat-bg hover:rounded-sm "
             title="Add or Delete members"
             onClick={() => {
               setShowEditGroupMember((prev) => !prev);

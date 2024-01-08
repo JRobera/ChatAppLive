@@ -34,7 +34,7 @@ export default function EditGroup({ currentChat }) {
   };
 
   return (
-    <div className="absolute top-14 right-1 border-2 w-4/5 bg-[#edeefc] p-1 rounded-sm z-10">
+    <div className="absolute top-14 right-1 border-2 w-4/5 bg-chat-bg p-1 rounded-sm z-10">
       <form className="flex flex-col gap-2" onSubmit={handleSubmit(submit)}>
         <label
           htmlFor="group-profile"

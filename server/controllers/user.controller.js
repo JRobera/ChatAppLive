@@ -254,6 +254,7 @@ const getChats = async (req, res) => {
       path: "chats",
       // match: { room: checkedRoom },
     })
+    .select("-firstName -lastName -password")
     .sort({ updatedAt: -1 });
 
   for (const chat of chats) {

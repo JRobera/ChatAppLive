@@ -21,14 +21,11 @@ export default function SearchItem({ id, fullName, currentChat }) {
     <div className="flex border-[1px] bg-white p-1 rounded-sm">
       <p className="flex-1 text-sm">{fullName}</p>
       <div className="flex gap-2">
-        <button
-          className="p-[1px] hover:bg-[#edeefc]"
-          onClick={handleAddMember}
-        >
+        <button className="p-[1px] hover:bg-chat-bg" onClick={handleAddMember}>
           <IoPersonAddOutline size={20} />
         </button>
         <button
-          className="p-[1px] hover:bg-[#edeefc]"
+          className="p-[1px] hover:bg-chat-bg"
           onClick={handleRemoveMember}
         >
           <HiOutlineUserMinus size={20} />
