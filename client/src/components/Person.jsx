@@ -17,7 +17,7 @@ export default function Person() {
   };
 
   return (
-    <div className="flex items-center sm:flex-col overflow-x-auto gap-[1px] sm:min-h-[420px] sm:max-h-[420px] m-[1px]">
+    <div className="flex items-center sm:flex-col overflow-x-auto gap-[1px] min-h-[120px] sm:min-h-[420px] sm:max-h-[420px] m-[1px]">
       {filterdChats?.map((chat) => (
         <Chat
           key={chat?._id}

@@ -28,7 +28,7 @@ export default function SignUp() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user !== null) {
-      navigate("/home");
+      navigate("/home/person");
     }
   }, [user]);
 

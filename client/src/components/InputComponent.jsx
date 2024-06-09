@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BsSend } from "react-icons/bs";
 import { GiSoundWaves } from "react-icons/gi";
 import { CiImageOn } from "react-icons/ci";
@@ -13,6 +13,7 @@ import ReplyMessage from "./ReplyMessage";
 import { addNotification } from "../features/notification/notificationSlice";
 import { uploadChatAudio, uploadChatImage } from "../lib/uploadfile";
 import SelectedFile from "./SelectedFile";
+import TextArea from "./TextArea";
 
 export default function InputComponent({
   socket,
@@ -22,7 +23,6 @@ export default function InputComponent({
 }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const location = useLocation();
   const [file, setFile] = useState(null);
   const [isChatFileLoading, setIsChatFileLoading] = useState(false);
 
@@ -145,6 +145,10 @@ export default function InputComponent({
     setIsChatFileLoading(false);
   };
   // console.log(replyMessage);
+  const handleChange = (data) => {
+    setMessage((prev) => ({ ...prev, message: data }));
+  };
+
   return (
     <div className="border-t-2 flex gap-1 items-center p-1 relative">
       {replyMessage && (
@@ -161,17 +165,12 @@ export default function InputComponent({
           isChatFileLoading={isChatFileLoading}
         />
       )}
-      <textarea
-        name="message"
-        id=""
+      <TextArea
         disabled={file}
-        value={message.message}
-        onChange={(e) => {
-          setMessage((prev) => ({ ...prev, message: e.target.value }));
-        }}
-        className="flex-1 text-md p-1 resize-none"
+        message={message.message}
+        handleChange={handleChange}
         placeholder="Type a message..."
-      ></textarea>
+      />
       <label
         className=" cursor-pointer hover:bg-chat-bg rounded-sm"
         htmlFor="audio"
