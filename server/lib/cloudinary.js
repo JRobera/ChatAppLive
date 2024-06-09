@@ -45,10 +45,18 @@ const uploadAudioToCloudinary = async (path, folder) => {
     });
 };
 
-const removeFromCloudinary = async (public_id) => {
-  await cloudinary.v2.uploader.destroy(public_id, function (error, result) {
-    console.log(result, error);
-  });
+const removeFromCloudinary = async (public_id, type) => {
+  await cloudinary.v2.uploader.destroy(
+    public_id,
+    { resource_type: type },
+    function (error, _result) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Deleted successfuly");
+      }
+    }
+  );
 };
 
 export { uploadToCloudinary, uploadAudioToCloudinary, removeFromCloudinary };

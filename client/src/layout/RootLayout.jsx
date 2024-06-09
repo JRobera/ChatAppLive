@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import api from "../axios";
+
 import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
 import SearchBar from "../components/SearchBar";
@@ -8,11 +8,9 @@ import Messages from "../components/Messages";
 import InputComponent from "../components/InputComponent";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getUserStatus,
-  refreshToken,
+  // getUserStatus,
   selectUser,
 } from "../features/user/userSlice";
-import { io } from "socket.io-client";
 import { restMessage } from "../features/messages/messageSlice";
 import { fetchNotification } from "../features/notification/notificationSlice";
 import CurrentChatInfo from "../components/currentchatinfo/CurrentChatInfo";
@@ -28,13 +26,12 @@ import {
   selectAllChats,
 } from "../features/chats/chatsSlice";
 import UserSkeleton from "../skeleton/UserSkeleton.jsx";
-
-const socket = io(api.defaults.baseURL);
+import { socket } from "../socket.js";
 
 export default function RootLayout() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const userStatus = useSelector(getUserStatus);
+  // const userStatus = useSelector(getUserStatus);
   const chats = useSelector(selectAllChats);
   const chatStatus = useSelector(getChatStatus);
   const groups = useSelector(selectAllGroup);
@@ -42,13 +39,12 @@ export default function RootLayout() {
   const [currentChat, setCurrentChat] = useState(null);
   const [replyMessage, setreplyMessage] = useState(null);
   const [filterdChats, setFilterdChats] = useState([]);
-
+  // const navigate = useNavigate();
   const location = useLocation();
-  const navigate = useNavigate();
   const handleFilteredUsers = (data) => {
     setFilterdChats(data);
   };
-  const selectList = () => {
+  const selectList = useCallback(() => {
     if (location.pathname === "/home/person") {
       return chats;
     } else if (location.pathname === "/home/group") {
@@ -56,28 +52,24 @@ export default function RootLayout() {
     } else if (location.pathname === "/home") {
       return [...chats, ...groups];
     }
-  };
+    return [];
+  }, [chats, groups, location.pathname]);
 
   useEffect(() => {
-    // if (user === null) {
-    //   return navigate("/");
-    // } else {
-    //   dispatch(refreshToken());
-    // }
     socket.emit("user-data", user?._id);
     dispatch(fetchNotification(user?._id));
     dispatch(fetchChats(user?._id));
     dispatch(fetchGroup(user?._id));
-    setFilterdChats(selectList());
     dispatch(setGroupStatus("idle"));
   }, []);
 
   useEffect(() => {
+    setFilterdChats(selectList()); // Update after data is fetched
+  }, [chats, groups, location.pathname]);
+
+  useEffect(() => {
     dispatch(restMessage());
   }, [currentChat]);
-  useEffect(() => {
-    setFilterdChats(selectList());
-  }, [location.pathname]);
 
   return (
     <div className="flex h-full flex-col-reverse sm:flex-row overflow-auto">
@@ -85,7 +77,7 @@ export default function RootLayout() {
       <div className=" flex-1">
         <NavBar profile={user?.profile} socket={socket} />
         <div className="chatWindow flex flex-col sm:flex-row m-2 mt-0 border-2 min-h-[480px] sm:max-h-[485px] overflow-x-auto rounded-md">
-          <div className="border-r-2 flex-1 pt-2 flex flex-col">
+          <div className="sm:border-r-2 flex-1 pt-2 flex flex-col">
             <SearchBar
               list={selectList()}
               handleFilteredUsers={handleFilteredUsers}
@@ -105,7 +97,11 @@ export default function RootLayout() {
             {/* Current Chat Info Bar */}
             <CurrentChatInfo currentChat={currentChat} />
 
-            <Messages socket={socket} setreplyMessage={setreplyMessage} />
+            <Messages
+              socket={socket}
+              currentChat={currentChat}
+              setreplyMessage={setreplyMessage}
+            />
             <InputComponent
               socket={socket}
               currentChat={currentChat}

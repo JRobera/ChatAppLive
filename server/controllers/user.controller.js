@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import checkRoom from "../lib/checkRoom.js";
-import { uploadToCloudinary } from "../lib/cloudinary.js";
+import { removeFromCloudinary, uploadToCloudinary } from "../lib/cloudinary.js";
 
 const signUpUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -53,8 +53,8 @@ const signUpUser = async (req, res) => {
   }
 };
 const signInUser = async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     const foundUser = await User.findOne({ email: email });
     if (foundUser) {
       bcrypt.compare(password, foundUser.password, async (err, result) => {
@@ -166,8 +166,8 @@ const refreshToken = async (req, res) => {
 };
 
 const updateUserName = async (req, res) => {
-  const { _id, newName } = req.body;
   try {
+    const { _id, newName } = req.body;
     const foundUser = await User.findOneAndUpdate(
       { _id: _id },
       { fullName: newName }
@@ -187,8 +187,8 @@ const updateUserName = async (req, res) => {
   }
 };
 const changeUserPassword = async (req, res) => {
-  const { _id, oldPassword, newPassword } = req.body;
   try {
+    const { _id, oldPassword, newPassword } = req.body;
     const foundUser = await User.findOne({ _id: _id });
     if (foundUser) {
       bcrypt.compare(oldPassword, foundUser?.password, (err, result) => {
@@ -219,19 +219,22 @@ const changeUserPassword = async (req, res) => {
 };
 
 const changeUserProfile = async (req, res) => {
-  const { id } = req.body;
   try {
+    const { id } = req.body;
     const profileImg = await uploadToCloudinary(req.file.path, "chat-user");
-    const updatedUser = await User.findOneAndUpdate(
+    const oldUserProfile = await User.findOneAndUpdate(
       { _id: id },
       {
         $set: {
           "profile.img": profileImg.url,
           "profile.public_id": profileImg.public_id,
         },
-      },
-      { new: true }
+      }
     );
+    if (oldUserProfile.profile.public_id)
+      await removeFromCloudinary(oldUserProfile.profile.public_id, "video");
+
+    const updatedUser = await User.findOne({ _id: id });
     const user = {
       _id: updatedUser._id,
       fullName: updatedUser.fullName,

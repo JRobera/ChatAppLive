@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import api from "../../axios";
+import api from "../../axios.js";
+import { socket } from "../../socket.js";
 
 const initialState = {
   status: "idle",
@@ -126,9 +127,18 @@ export const messagesSlice = createSlice({
       // console.log(action.payload);
       state.messages?.chats?.push(action.payload);
     },
+    updateMessage: (state, action) => {
+      state.messages.chats = action.payload;
+      // console.log(action.payload);
+    },
     deleteMessage: (state, action) => {
       state.messages.chats = state.messages.chats.filter(
         (message) => message._id !== action.payload
+      );
+      socket.emit(
+        "delete-message",
+        state.messages?.room || state.messages?._id,
+        state.messages?.chats
       );
     },
     restMessage: (state, action) => {
@@ -143,6 +153,7 @@ export const messagesSlice = createSlice({
     builder.addCase(fetchMessages.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.messages = action.payload;
+      // console.log(action.payload);
     });
     builder.addCase(fetchMessages.rejected, (state, action) => {
       state.status = "failed";
@@ -171,6 +182,7 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(deleteMessageAsync.fulfilled, (state, action) => {
       state.status = "succeeded";
+      // state.messages.chats = action.payload;
     });
     builder.addCase(deleteMessageAsync.rejected, (state, action) => {
       state.status = "failed";
@@ -195,7 +207,8 @@ export const messagesSlice = createSlice({
     });
     builder.addCase(postGroupMessage.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.messages = action.payload;
+      // state.messages.chats = action.payload;
+      // console.log(JSON.stringify(state.messages.chats));
       // console.log(action.payload);
     });
     builder.addCase(postGroupMessage.rejected, (state, action) => {
@@ -205,7 +218,7 @@ export const messagesSlice = createSlice({
   },
 });
 
-export const { addNewMessage, deleteMessage, restMessage } =
+export const { addNewMessage, updateMessage, deleteMessage, restMessage } =
   messagesSlice.actions;
 
 export default messagesSlice.reducer;

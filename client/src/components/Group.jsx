@@ -15,7 +15,7 @@ export default function Group() {
   };
 
   return (
-    <div className="flex items-center sm:flex-col overflow-x-auto sm:min-h-[420px] sm:max-h-[420px]">
+    <div className="flex items-center sm:flex-col overflow-x-auto gap-[1px] sm:min-h-[420px] sm:max-h-[420px] m-[1px]">
       {filterdChats?.map((group) => (
         <Chat
           key={group?._id}

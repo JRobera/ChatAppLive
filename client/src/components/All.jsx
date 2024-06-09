@@ -26,7 +26,7 @@ export default function All() {
   };
 
   return (
-    <div className="flex items-stretch sm:items-center sm:flex-col overflow-x-auto sm:min-h-[420px] sm:max-h-[420px]">
+    <div className=" grid grid-flow-col sm:flex items-stretch sm:items-center sm:flex-col overflow-x-auto gap[1px] sm:min-h-[420px] sm:max-h-[420px] m-[1px]">
       {filterdChats?.map((chat) => (
         <Chat
           key={chat?._id}

@@ -10,6 +10,7 @@ export default {
         light: "#ffffff",
         mbg: { active: "#878ef8" },
         chat: { bg: "#edeefc" },
+        cover: { second: "#f5f5f5" },
         card: {
           bg: "#eaebf0",
         },

@@ -3,11 +3,16 @@ import { useLocation } from "react-router-dom";
 
 import Message from "./Message";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewMessage } from "../features/messages/messageSlice";
+import {
+  addNewMessage,
+  fetchGroupChat,
+} from "../features/messages/messageSlice";
 import { parseISO } from "date-fns";
+import { selectUser } from "../features/user/userSlice";
 
-export default function Messages({ socket, setreplyMessage }) {
+export default function Messages({ socket, currentChat, setreplyMessage }) {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const messages = useSelector((state) => state.messages.messages);
   const location = useLocation();
   const containerRef = useRef(null);
@@ -18,15 +23,25 @@ export default function Messages({ socket, setreplyMessage }) {
   }, [messages]);
 
   useEffect(() => {
-    {
-      location.pathname === "/home/person"
-        ? socket.on("receive-message", (data) => {
-            dispatch(addNewMessage(data));
-          })
-        : socket.on("receive-group-message", (data) => {
-            dispatch(addNewMessage(data));
-          });
-    }
+    location.pathname === "/home/person"
+      ? socket.on("receive-message", (data) => {
+          dispatch(addNewMessage(data));
+          if (currentChat)
+            dispatch(
+              fetchMessages({
+                user: user?._id,
+                currentChat: currentChat?._id,
+              })
+            );
+        })
+      : location.pathname === "/home/group"
+      ? socket.on("receive-group-message", (data) => {
+          dispatch(addNewMessage(data));
+          if (currentChat) dispatch(fetchGroupChat({ _id: currentChat?._id }));
+        })
+      : null;
+
+    // console.log(currentChat?.chatType);
   }, [socket]);
 
   const handleReply = (data) => {
@@ -36,7 +51,7 @@ export default function Messages({ socket, setreplyMessage }) {
 
   // console.log(messages);
   return (
-    <div className=" min-h-[360px] max-h-[360px] overflow-x-auto flex flex-col">
+    <div className=" min-h-[255px] max-h-[255px] sm:min-h-[360px] sm:max-h-[360px] overflow-x-auto flex flex-col">
       {messages?.chats?.map((message, idx) => (
         <Message
           key={idx}

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { TfiMore } from "react-icons/tfi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/user/userSlice";
 import MoreMenu from "./MoreMenu";
 import ReplyHead from "./ReplyHead";
+import { socket } from "../socket";
+import { updateMessage } from "../features/messages/messageSlice";
 
 export default function Message({
   senderId,
@@ -15,10 +17,15 @@ export default function Message({
   replyTo,
   handleReply,
 }) {
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const [showMore, setShowMore] = useState(false);
 
   const handleMore = () => setShowMore((prev) => !prev);
+
+  socket.on("update-message", (chats) => {
+    dispatch(updateMessage(chats));
+  });
 
   let messageType;
   if (type === "text") {

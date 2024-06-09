@@ -19,12 +19,15 @@ export default function MoreMenu({
   const location = useLocation();
   const menu = ["Reply", "Delete"];
 
+  // Future plan
   const handleEditMessage = () => {
     const filtered = messages.filter((message) => message._id !== _id);
-    console.log(filtered);
+    // console.log(filtered);
   };
+
   const handleDeleteMessage = () => {
     dispatch(deleteMessage(_id));
+
     if (location.pathname === "/home/person") {
       dispatch(deleteMessageAsync({ room: messages?.room, _id: _id }));
     } else {

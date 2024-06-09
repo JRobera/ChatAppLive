@@ -17,6 +17,8 @@ import { useEffect } from "react";
 import { refreshToken } from "./features/user/userSlice";
 import { useDispatch } from "react-redux";
 import ProtectedRoute from "./ProtectedRoute";
+import RequireAuth from "./components/RequireAuth";
+import NotFound from "./components/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,12 +34,16 @@ function App() {
           <Route path="signin" element={<SignIn />} />
         </Route>
         <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<RootLayout />}>
-            <Route index element={<All />} />
-            <Route path="person" element={<Person />} />
-            <Route path="Group" element={<Group />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/home" element={<RootLayout />}>
+              {/* have a bug working on it*/}
+              {/* <Route index element={<All />} />  */}
+              <Route index path="person" element={<Person />} />
+              <Route path="Group" element={<Group />} />
+            </Route>
           </Route>
         </Route>
+        <Route path="*" element={<NotFound />} />
       </>
     )
   );

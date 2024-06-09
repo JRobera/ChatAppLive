@@ -10,6 +10,7 @@ import {
   selectAllNotifications,
 } from "../features/notification/notificationSlice";
 import Notification from "./Notification";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 export default function NavBar({ profile, socket }) {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ export default function NavBar({ profile, socket }) {
 
   return (
     <header className="flex p-2">
+      <span className=" font-bold sm:hidden flex items-center sm:w-full text-center">
+        <IoChatboxEllipsesOutline size={25} />
+      </span>
       {user !== null ? (
         <nav className=" flex flex-1 gap-2 items-center justify-end">
           <div className=" relative">

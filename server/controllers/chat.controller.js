@@ -1,5 +1,5 @@
 import checkRoom from "../lib/checkRoom.js";
-import { uploadToCloudinary } from "../lib/cloudinary.js";
+import { removeFromCloudinary, uploadToCloudinary } from "../lib/cloudinary.js";
 import Chat from "../models/chat.model.js";
 import User from "../models/user.model.js";
 
@@ -21,20 +21,20 @@ const getMessageForRoom = async (req, res) => {
 };
 
 const addMessageToRoom = async (req, res) => {
-  const {
-    senderId,
-    replyTo,
-    message,
-    time,
-    user,
-    currentChat,
-    type,
-    public_id,
-  } = req.body;
-
-  const foundRoom = await checkRoom(user, currentChat);
-  // const chat = { message: message, time: time, senderId: senderId, type: type };
   try {
+    const {
+      senderId,
+      replyTo,
+      message,
+      time,
+      user,
+      currentChat,
+      type,
+      public_id,
+    } = req.body;
+
+    const foundRoom = await checkRoom(user, currentChat);
+    // const chat = { message: message, time: time, senderId: senderId, type: type };
     if (!replyTo) {
       const foundRoomChat = await Chat.findOneAndUpdate(
         { room: foundRoom.room },
@@ -46,7 +46,7 @@ const addMessageToRoom = async (req, res) => {
         { new: true }
       );
       // console.log(foundRoomChat);
-      res.status(200).json({ data: foundRoomChat.chats });
+      res.status(201).json({ data: foundRoomChat.chats });
     } else {
       const foundRoomChat = await Chat.findOneAndUpdate(
         { room: foundRoom.room },
@@ -58,7 +58,7 @@ const addMessageToRoom = async (req, res) => {
         { new: true }
       );
       // console.log(foundRoomChat);
-      res.status(200).json({ data: foundRoomChat.chats });
+      res.status(201).json({ data: foundRoomChat.chats });
     }
   } catch (error) {
     res.json({ error: error });
@@ -71,15 +71,19 @@ const updateMessage = async (req, res) => {
 };
 
 const deleteMessage = async (req, res) => {
-  const { room, _id } = req.body;
   try {
+    const { room, _id } = req.body;
     const newchat = await Chat.findOneAndUpdate(
       { room: room },
-      { $pull: { chats: { _id: _id } } },
-      { new: true }
+      { $pull: { chats: { _id: _id } } }
     );
-    // console.log(newchat);
-    res.status(200).json();
+    const deleted = newchat.chats.filter((chat) => chat._id == _id);
+    if (deleted[0]?.public_id)
+      await removeFromCloudinary(deleted[0].public_id, "video");
+
+    const updated = newchat.chats.filter((chat) => chat._id != _id);
+    // console.log(deleted[0]);
+    res.status(200).json(updated);
   } catch (error) {
     res.json({ error: error });
   }

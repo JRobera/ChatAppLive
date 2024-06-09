@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import api from "../../axios";
+import api from "../../axios.js";
 
 const initialState = {
   user: null,

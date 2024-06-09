@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../axios";
+import api from "../../axios.js";
 
 const initialState = {
   status: "idle",
@@ -11,6 +11,7 @@ const initialState = {
 export const createGroup = createAsyncThunk(
   "group/createGroup",
   async (data, { rejectWithValue }) => {
+    console.log(data);
     try {
       const res = await api.post("/api/create-group", data);
       return res.data;

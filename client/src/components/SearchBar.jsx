@@ -23,7 +23,7 @@ export default function SearchBar({ list, handleFilteredUsers }) {
   }, [filterUser]);
 
   return (
-    <div className=" mx-2 mb-3 flex gap-1 border-2 rounded-md justify-center items-center bg-white">
+    <div className=" mx-2 mb-2 flex gap-1 border-2 rounded-md justify-center items-center bg-white">
       <CiSearch size={20} />
       <input
         className=" w-full rounded-md p-1 focus:border-none focus:outline-none "

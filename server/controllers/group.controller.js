@@ -1,4 +1,4 @@
-import { uploadToCloudinary } from "../lib/cloudinary.js";
+import { removeFromCloudinary, uploadToCloudinary } from "../lib/cloudinary.js";
 import Group from "../models/group.model.js";
 
 const createGroup = async (req, res) => {
@@ -14,8 +14,8 @@ const createGroup = async (req, res) => {
       admin,
       public_group: group_type,
       profile: {
-        img: newGroupProfile.url,
-        public_id: newGroupProfile.public_id,
+        img: newGroupProfile?.url,
+        public_id: newGroupProfile?.public_id,
       },
       members: admin,
     });
@@ -51,18 +51,26 @@ const getGroups = async (req, res) => {
 };
 
 const addMessageToGroup = async (req, res) => {
-  const { message, senderId, replyTo, time, currentChat, type } = req.body;
   try {
+    const { message, senderId, replyTo, time, currentChat, type, public_id } =
+      req.body;
     if (!replyTo) {
       const foundGroup = await Group.findOneAndUpdate(
         { _id: currentChat },
-        { $push: { chats: { message, time, senderId, type } } }
+        { $push: { chats: { message, time, senderId, type, public_id } } }
       );
+      // console.log(foundGroup.chats);
+      return res.status(201).json(foundGroup);
     } else {
       const foundGroup = await Group.findOneAndUpdate(
         { _id: currentChat },
-        { $push: { chats: { message, time, senderId, replyTo, type } } }
+        {
+          $push: {
+            chats: { message, time, senderId, replyTo, type, public_id },
+          },
+        }
       );
+      return res.status(201).json(foundGroup.chats);
     }
   } catch (error) {
     console.log(error);
@@ -87,11 +95,15 @@ const deleteGroupMessage = async (req, res) => {
   try {
     const newchat = await Group.findOneAndUpdate(
       { _id: group_id },
-      { $pull: { chats: { _id: message_id } } },
-      { new: true }
+      { $pull: { chats: { _id: message_id } } }
     );
-    // console.log(newchat);
-    res.status(200).json();
+    const deleted = newchat.chats.filter((chat) => chat._id == message_id);
+    if (deleted[0]?.public_id)
+      await removeFromCloudinary(deleted[0].public_id, "video");
+
+    const updated = newchat.chats.filter((chat) => chat._id != message_id);
+    // console.log(deleted[0]);
+    res.status(200).json(updated);
   } catch (error) {
     console.log(error);
   }
@@ -106,7 +118,7 @@ const updateGroupProfile = async (req, res) => {
         req.file.path,
         "group-profiles"
       );
-      const updateGroup = await Group.findOneAndUpdate(
+      const oldGroupProfile = await Group.findOneAndUpdate(
         { _id: group_id },
         {
           $set: {
@@ -114,12 +126,16 @@ const updateGroupProfile = async (req, res) => {
             "profile.img": newgroupProfile.url,
             "profile.public_id": newgroupProfile.public_id,
           },
-        },
-        { new: true }
+        }
       );
+      if (oldGroupProfile.profile?.public_id)
+        await removeFromCloudinary(oldGroupProfile.profile.public_id, "video");
+
+      const updatedGroup = await Group.findOne({ _id: group_id });
+
       res
         .status(200)
-        .json({ data: updateGroup, message: "Group Profile Updated" });
+        .json({ data: updatedGroup, message: "Group Profile Updated" });
     } else {
       const updateGroup = await Group.findOneAndUpdate(
         { _id: group_id },

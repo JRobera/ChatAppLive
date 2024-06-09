@@ -48,6 +48,7 @@ export default function CreateGroup() {
     formData.append("admin", user?._id);
     formData.append("groupProfile", groupProfile);
     dispatch(createGroup(formData));
+    console.log(formData);
     reset();
     setGroupProfile(null);
   };
