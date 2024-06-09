@@ -1,6 +1,6 @@
 # Chat Webapp
 
-![ChatAppScreenshot](https://github.com/JRobera/MusicApp/assets/90910570/d0029667-0fac-490f-b23a-24104eb4f1b4)
+![ChatAppScreenshot](https://res.cloudinary.com/dbv6hao81/image/upload/v1717934349/Screenshot_2024-06-09_145706_oe26op.png)
 
 A fullstack chat webapp where user can create, update, and delete groups. Users can create public and private groups and add members to the group. Users can share audio and image file also. And it is responsive so user can use it in small size devices.
 
