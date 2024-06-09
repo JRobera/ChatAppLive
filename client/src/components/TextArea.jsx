@@ -45,7 +45,7 @@ export default function TextArea({
         setText(e.target.value);
         handleChange(e.target.value);
       }}
-      className="flex-1 text-md p-1 resize-none"
+      className="flex-1 text-md p-1 resize-none max-h-36"
       placeholder={placeholder}
     />
   );

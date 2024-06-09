@@ -38,9 +38,12 @@ export default function NavBar({ profile, socket }) {
 
   return (
     <header className="flex p-2">
-      <span className=" font-bold sm:hidden flex items-center sm:w-full text-center">
-        <IoChatboxEllipsesOutline size={25} />
-      </span>
+      {user && (
+        <span className=" font-bold sm:hidden flex gap-1 items-center sm:w-full text-center">
+          Chat
+          <IoChatboxEllipsesOutline size={25} />
+        </span>
+      )}
       {user !== null ? (
         <nav className=" flex flex-1 gap-2 items-center justify-end">
           <div className=" relative">
@@ -70,14 +73,19 @@ export default function NavBar({ profile, socket }) {
           </button>
         </nav>
       ) : (
-        <nav className=" flex gap-2 items-center justify-end w-full shadow-md">
+        <nav className=" flex gap-2 items-center justify-end w-full p-1 rounded bg-card-bg">
           <span className="font-bold text-lg">
-            <Link to="/">Chat</Link>
+            <Link to="/">
+              <span className=" font-bold sm:hidden flex gap-1 items-center sm:w-full text-center">
+                Chat
+                <IoChatboxEllipsesOutline size={25} />
+              </span>
+            </Link>
           </span>
           <div className="flex-1 flex gap-4 justify-end">
             <NavLink
               to="/signin"
-              className="text-sm font-semibold p-1 rounded-sm hover:text-[#3f4080]"
+              className="text-sm font-semibold p-1 rounded-sm hover:text-[#3f4080] hover:underline"
             >
               Signin
             </NavLink>

@@ -51,7 +51,7 @@ export default function Messages({ socket, currentChat, setreplyMessage }) {
 
   // console.log(messages);
   return (
-    <div className=" min-h-[255px] max-h-[255px] sm:min-h-[360px] sm:max-h-[360px] overflow-x-auto flex flex-col">
+    <div className=" min-h-[255px] max-h-[260px] sm:min-h-[360px] sm:max-h-[360px] overflow-x-auto flex flex-col">
       {messages?.chats?.map((message, idx) => (
         <Message
           key={idx}

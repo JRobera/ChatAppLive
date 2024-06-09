@@ -111,7 +111,10 @@ export default function SignIn() {
       </button>
       <p className="text-sm">
         Don't have account?{" "}
-        <Link to="/" className="text-blue-600">
+        <Link
+          to="/"
+          className=" font-bold hover:text-[#3f4080] hover:underline"
+        >
           Signup
         </Link>
       </p>
