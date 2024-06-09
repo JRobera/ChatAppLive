@@ -22,5 +22,13 @@ export default function ProtectedRoute() {
   if (userStatus === "failed") {
     return <Navigate to="/" replace />;
   }
-  return <>{userStatus === "loading" ? <SpinnerWrapper /> : <Outlet />}</>;
+  return (
+    <>
+      {userStatus === "loading" && !accessToken ? (
+        <SpinnerWrapper />
+      ) : (
+        <Outlet />
+      )}
+    </>
+  );
 }
