@@ -76,7 +76,7 @@ export default function NavBar({ profile, socket }) {
         <nav className=" flex gap-2 items-center justify-end w-full p-1 rounded bg-card-bg">
           <span className="font-bold text-lg">
             <Link to="/">
-              <span className=" font-bold sm:hidden flex gap-1 items-center sm:w-full text-center">
+              <span className=" font-bold flex gap-1 items-center sm:w-full text-center">
                 Chat
                 <IoChatboxEllipsesOutline size={25} />
               </span>
@@ -87,7 +87,7 @@ export default function NavBar({ profile, socket }) {
               to="/signin"
               className="text-sm font-semibold p-1 rounded-sm hover:text-[#3f4080] hover:underline"
             >
-              Signin
+              Sign in
             </NavLink>
 
             {/* <NavLink
